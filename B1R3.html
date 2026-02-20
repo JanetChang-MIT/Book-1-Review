@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 3: An Island’s Beauty, an Islander’s Duty | B1R3 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #0ea5e9; color: white; border-color: #38bdf8; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-sky-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-island-tropical fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-sky-500 via-emerald-500 to-indigo-700 bg-clip-text text-transparent">
+                    Review 3: An Island’s Beauty, an Islander’s Duty
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-sky-400"></i> B1 Review Dashboard – Documentary, Disasters & Conservation
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-sky-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-sky-400 to-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Expressions
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Island Duty Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-sky-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-sky-100 font-black text-8xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-sky-100 text-sky-600 font-black text-xs uppercase tracking-widest mb-3">n.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-1">director</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-2">導演</h3>
+                            <p id="vocab-family" class="text-sm md:text-base text-slate-500 mb-6 italic"></p>
+                            
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-sky-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-sky-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-sky-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-sky-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 19</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-sky-500 shadow-xl flex items-center justify-center text-white hover:bg-sky-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-sky-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPRESSIONS / CONTENT SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <!-- Focus: contrast, emotional impact, cause & prevention -->
+                <div class="bg-gradient-to-br from-indigo-900 to-sky-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">on the contrary, pay off, damage to</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-sky-300 flex items-center gap-2 mb-4">
+                                <i class="fas fa-lightbulb"></i> Arguing about impact and responsibility
+                            </h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                Environmental topics at this level often mix <span class="font-bold">facts</span> (damage, disasters, proof) with <span class="font-bold">opinions</span> and feelings. [web:157][web:160][web:161]
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• Some people say one person’s actions don’t matter; <span class="text-sky-300 font-bold">on the contrary</span>, conservation depends on everyone.</li>
+                                <li>• Years of hard work to protect the island finally <span class="text-sky-300 font-bold">paid off</span> when natural disasters caused less damage.</li>
+                                <li>• The documentary shows the serious <span class="text-sky-300 font-bold">damage to</span> the coastline and its impact on local people.</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Key points</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-green-300 font-black">•</span> <span class="font-bold">on the contrary</span> strongly disagrees with the previous idea.</p>
+                                <p><span class="text-green-300 font-black">•</span> <span class="font-bold">pay off</span> = bring a good result after effort.</p>
+                                <p><span class="text-green-300 font-black">•</span> <span class="font-bold">damage to + noun</span> describes what is harmed.</p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> On the contrary, I agree with you.</p>
+                                <p><span class="text-green-300 font-black">✓</span> On the contrary, I think the impact is much more serious.</p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    Use \"on the contrary\" when you want to say the opposite, not when you agree.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentary, disasters, conservation, gratitude -->
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-sky-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-sky-500">
+                        <i class="fas fa-video"></i> Turning beauty and tragedy into action
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-sky-50 p-8 rounded-3xl border-2 border-sky-100">
+                            <p class="text-sm mb-3">
+                                Documentary photography and film can raise awareness of disasters and conservation issues, leading people to protect their islands and coasts. [web:157][web:160]
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• Directors and photographers capture proof of damage and record natural disasters to show their true impact.</li>
+                                <li>• These images can tear at people’s hearts, motivating them to prevent future tragedies through better conservation.</li>
+                                <li>• When communities work together, the results can be a masterpiece of protection, preserving the scenery for future generations.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                Combine <span class="font-bold">emotion words</span> (tragedy, grateful, tear at one’s heart)  
+                                with <span class="font-bold">action words</span> (prevent, conserve, give up, pay off) to describe how islanders respond to environmental problems.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-sky-500 to-indigo-500 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "An island’s beauty is a gift, but its safety is our duty. Use English to explain both the problems and the solutions."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: Review 3 – An Island’s Beauty, an Islander’s Duty ---
+
+        const vocabulary = [
+            {
+                word: "director",
+                pos: "n.",
+                def: "導演",
+                family: "",
+                example: "The film director asked the actor and actress to do the scene again with more emotion.",
+                ch: "電影導演要求演員帶多一些感情把這一幕重演一遍。"
+            },
+            {
+                word: "documentary",
+                pos: "n.",
+                def: "紀錄片",
+                family: "",
+                example: "The famous director is making a documentary about polar bears.",
+                ch: "這位有名的導演正在拍一部有關北極熊的紀錄片。"
+            },
+            {
+                word: "industry",
+                pos: "n.",
+                def: "產業；工業",
+                family: "industrial (adj.)",
+                example: "Annie wants to work in the service industry when she grows up because she loves helping people.",
+                ch: "Annie因為喜歡幫助他人而想要在長大後從事服務業。"
+            },
+            {
+                word: "photographer",
+                pos: "n.",
+                def: "攝影師",
+                family: "photograph (n.)",
+                example: "The company is looking for a photographer to take photos of their latest clothing designs.",
+                ch: "這家公司正在尋找攝影師幫它們最新的服裝設計拍照。"
+            },
+            {
+                word: "capture",
+                pos: "v.",
+                def: "拍攝；捕捉",
+                family: "",
+                example: "Instead of trying to capture the beautiful Northern Lights, Dan just put down his camera and enjoyed the view.",
+                ch: "Dan沒有試著拍攝美麗的北極光，而是放下照相機享受景色。"
+            },
+            {
+                word: "proof",
+                pos: "n.",
+                def: "證據",
+                family: "prove (v.)",
+                example: "The police need proof of a crime before they can arrest someone.",
+                ch: "在逮捕人之前，警方需要犯罪證據。"
+            },
+            {
+                word: "damage",
+                pos: "n./v.",
+                def: "損害；傷害；傷害",
+                family: "damaging (adj.)",
+                example: "The storm caused serious damage to many of the boats in the port.",
+                ch: "那場暴風對港口許多船隻造成損害。"
+            },
+            {
+                word: "effect",
+                pos: "n.",
+                def: "影響",
+                family: "effective (adj.)",
+                example: "The Internet has had many effects on the way we communicate with our friends and family members.",
+                ch: "網路對我們和朋友及家人的聯繫方式已經造成許多影響。"
+            },
+            {
+                word: "conservation",
+                pos: "n.",
+                def: "保護",
+                family: "",
+                example: "Jerry is very interested in wildlife conservation, so he decided to become a wildlife photographer.",
+                ch: "Jerry對野生動物保護感興趣，所以他決定要當一位野生動物攝影師。"
+            },
+            {
+                word: "record",
+                pos: "v./n.",
+                def: "記錄；紀錄",
+                family: "",
+                example: "The news crew recorded the damage from the typhoon by shooting a video.",
+                ch: "這個新聞團隊藉由拍攝一段影片來記錄颱風帶來的損害。"
+            },
+            {
+                word: "disaster",
+                pos: "n.",
+                def: "災難",
+                family: "",
+                example: "The most common natural disasters to affect Taiwan are typhoons and earthquakes.",
+                ch: "影響臺灣最常見的天然災害是颱風和地震。"
+            },
+            {
+                word: "bury",
+                pos: "v.",
+                def: "掩埋；埋葬",
+                family: "",
+                example: "A young girl was buried alive when the bomb hit the building, but she was soon dug out and saved.",
+                ch: "有一個年輕女孩在炸彈炸到建築物的時候被活埋，但她不久就被挖出來而獲救。"
+            },
+            {
+                word: "shed",
+                pos: "v.",
+                def: "流下",
+                family: "",
+                example: "Mary shed tears over her big losses in the stock market.",
+                ch: "Mary為了她在股市的大損失而流下眼淚。"
+            },
+            {
+                word: "prevent",
+                pos: "v.",
+                def: "預防；阻止",
+                family: "prevention (n.)",
+                example: "Teachers often give summer homework to prevent their students from falling behind during the vacation.",
+                ch: "老師們常會出暑假作業以避免他們的學生在假期時課業落後。"
+            },
+            {
+                word: "tragedy",
+                pos: "n.",
+                def: "悲劇",
+                family: "tragic (adj.)",
+                example: "Language experts feel that the loss of many traditional languages in modern society is a great tragedy.",
+                ch: "語言專家覺得在現代社會中很多傳統語言的消失是很悲慘的事。"
+            },
+            {
+                word: "masterpiece",
+                pos: "n.",
+                def: "傑作",
+                family: "",
+                example: "The museum houses some of Picasso’s great cubist masterpieces.",
+                ch: "這間博物館收藏了一些畢卡索的立體派畫的傑作。"
+            },
+            {
+                word: "scenery",
+                pos: "n.",
+                def: "風景；景色",
+                family: "",
+                example: "Many people love going to the mountains to enjoy the fresh air and beautiful scenery.",
+                ch: "許多人喜愛到山裡享受清新的空氣和美麗的景色。"
+            },
+            {
+                word: "impact",
+                pos: "n.",
+                def: "影響",
+                family: "",
+                example: "The business book had a big impact on Ben. After he read it, he decided he was going to start his own company.",
+                ch: "這本商業書籍對Ben有很大的影響。在他讀完之後，他決定要開創自己的公司。"
+            },
+            {
+                word: "grateful",
+                pos: "adj.",
+                def: "感激的",
+                family: "gratitude (n.)",
+                example: "The grandfather was grateful to all his grandchildren for coming to see him on his birthday.",
+                ch: "那位祖父很感激他所有的孫子在他生日時來看他。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "start out", def: "開始", example: "On Jim’s trip to Italy, he started out in the north of the country and then traveled to the south." },
+            { phrase: "no longer", def: "不再", example: "Girls in our school weren’t allowed to have long hair before, but we no longer have this rule." },
+            { phrase: "on the contrary", def: "相反地", example: "I was told that stinky tofu was horrible; on the contrary, I find it quite delicious." },
+            { phrase: "tear at one’s heart", def: "使某人傷心欲絕", example: "It tore at the mother’s heart to watch her daughter get on the plane to study abroad for two years." },
+            { phrase: "pay off", def: "得到回報", example: "All those weeks of studying paid off when Parker got nearly perfect scores on all of his exams." },
+            { phrase: "damage to...", def: "對……造成損傷", example: "The typhoon has done serious damage to the town." },
+            { phrase: "give up", def: "放棄", example: "Fiona plans to work in this company for a long time because she doesn’t want to give up her high salary and easy schedule." }
+        ];
+
+        // Quiz questions – documentaries, disasters, conservation, idioms
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which sentence best matches the main idea of \"An Island’s Beauty, an Islander’s Duty\"?",
+                options: [
+                    "Beautiful scenery never changes, even after natural disasters.",
+                    "Only directors and photographers should care about conservation.",
+                    "Islanders must protect their home from damage and disasters, not just enjoy its beauty.",
+                    "Disasters are natural, so there is no need for prevention or conservation."
+                ],
+                correct: 2,
+                explanation: "The title links beauty with duty, suggesting that local people must act to protect their environment from damage and disasters. [web:157][web:160]"
+            },
+            {
+                type: "mc",
+                q: "Which sentence uses \"on the contrary\" correctly?",
+                options: [
+                    "The documentary was interesting; on the contrary, everyone liked it.",
+                    "Some people think one small action has no impact; on the contrary, it can help prevent a tragedy.",
+                    "The scenery was beautiful; on the contrary, the island was very pretty.",
+                    "The director was grateful; on the contrary, he appreciated the help."
+                ],
+                correct: 1,
+                explanation: "\"On the contrary\" introduces the opposite idea, not a similar one."
+            },
+            {
+                type: "error",
+                q: "Which part is wrong? \"The typhoon did serious damage for the fishing industry on the island.\"",
+                options: ["The typhoon did", "serious damage", "for", "the fishing industry"],
+                correct: 2,
+                fix: "to",
+                explanation: "We say \"damage to\" something, not \"damage for\"."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best shows how effort can \"pay off\"?",
+                options: [
+                    "The photographer gave up because the island’s scenery was ordinary.",
+                    "Years of conservation work paid off when the island suffered less damage during the latest disaster.",
+                    "The director started out making comedies and no longer makes films.",
+                    "The storm buried several boats in the port."
+                ],
+                correct: 1,
+                explanation: "\"Pay off\" means that long-term effort brings a good result."
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"The news crew ______ the disaster so that people around the world could see its impact.\"",
+                answer: "recorded",
+                hint: "r _ c _ r d _ d",
+                explanation: "\"Recorded\" is the past tense of \"record\", used for video and audio."
+            },
+            {
+                type: "mc",
+                q: "Which sentence uses \"conservation\" correctly?",
+                options: [
+                    "The conservation was very tragic and tore at my heart.",
+                    "Islanders started a conservation program to protect the local wildlife and coastline.",
+                    "The conservation of the film was a big masterpiece.",
+                    "He felt grateful conservation for his family."
+                ],
+                correct: 1,
+                explanation: "\"Conservation\" is used for protecting the natural environment and wildlife. [web:157][web:160]"
+            },
+            {
+                type: "error",
+                q: "Which word form is wrong? \"Documentary photographers often try to proof how disasters affect local people.\"",
+                options: ["Documentary", "photographers", "try to proof", "affect local people"],
+                correct: 2,
+                fix: "prove",
+                explanation: "We need the verb \"prove\", not the noun \"proof\", after \"to\"."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best fits the idiom \"tear at one’s heart\"?",
+                options: [
+                    "The director started out making a documentary about industry.",
+                    "The beautiful scenery tore at my heart.",
+                    "Watching the documentary about the buried village tore at the islanders’ hearts.",
+                    "The documentary was a masterpiece and no longer tragic."
+                ],
+                correct: 2,
+                explanation: "\"Tear at one’s heart\" describes deep sadness when seeing something painful."
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"Many islanders feel ______ for the help they receive after a disaster.\"",
+                answer: "grateful",
+                hint: "g _ a t _ f _ l",
+                explanation: "\"Grateful\" is an adjective we use for people who feel thankful."
+            },
+            {
+                type: "mc",
+                q: "Which option completes the sentence in the most natural way? \"We must act now to prevent this tragedy from happening ______.\"",
+                options: ["no longer", "again", "to", "for"],
+                correct: 1,
+                explanation: "\"Again\" fits with preventing a repeated tragedy after previous disasters. [web:161][web:163]"
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-sky-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-sky-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-sky-50 transition-all">
+                    <p class="font-black text-sky-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Well done!" : "💡 Take another look";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 4000);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Review Master! 🏆", msg: "You can now talk clearly about documentaries, disasters, and conservation in English.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You control the key vocabulary and idioms for describing environmental impact and action.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the idioms and disaster vocabulary, then try the challenge again.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Focus on a few core words like \"damage\", \"impact\", and \"prevent\" to describe real events around you.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>

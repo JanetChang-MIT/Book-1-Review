@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 1: When Shocked in Rome | B1R1 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #fee2e2 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #f97316; color: white; border-color: #fb923c; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-globe-europe fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 bg-clip-text text-transparent">
+                    Review 1: When Shocked in Rome
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-rose-400"></i> B1 Review Dashboard – Culture, Customs & Shock
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-rose-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-rose-400 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Expressions
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Culture Shock Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-rose-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-rose-100 font-black text-8xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-rose-100 text-rose-600 font-black text-xs uppercase tracking-widest mb-3">n.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-1">custom</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-2">習俗</h3>
+                            <p id="vocab-family" class="text-sm md:text-base text-slate-500 mb-6 italic"></p>
+                            
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-rose-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-rose-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-rose-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 15</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-rose-500 shadow-xl flex items-center justify-center text-white hover:bg-rose-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR / EXPRESSIONS SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <!-- Focus: contrast and sequencing expressions -->
+                <div class="bg-gradient-to-br from-indigo-900 to-rose-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">for a start, on the other hand</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-rose-300 flex items-center gap-2 mb-4">
+                                <i class="fas fa-lightbulb"></i> Organizing your opinions
+                            </h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                In review units about culture shock, we often need to give <span class="font-bold">reasons</span> and show <span class="font-bold">two sides</span> of a situation. [web:136][web:139][web:143]
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• <span class="text-rose-300 font-bold">For a start</span>, Italian mealtimes are later than in many other countries.</li>
+                                <li>• <span class="text-rose-300 font-bold">On the other hand</span>, this relaxed schedule can be hard for visitors who have to get off work early the next day.</li>
+                                <li>• I enjoy learning new customs; <span class="text-rose-300 font-bold">on the other hand</span>, I sometimes feel exhausted by all the differences.</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Key points</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-green-300 font-black">•</span> Use <span class="font-bold">for a start</span> to introduce your first reason in a list.</p>
+                                <p><span class="text-green-300 font-black">•</span> Use <span class="font-bold">on the other hand</span> to introduce a contrasting idea or problem.</p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    These expressions make your explanation of culture shock clearer and more natural.
+                                </p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> For a start, I like Italy, on the other hand, the food is delicious.</p>
+                                <p><span class="text-green-300 font-black">✓</span> For a start, the food is delicious. On the other hand, the daily schedule is very different from mine.</p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    Each expression should introduce a clear, separate point, not be pushed into the same idea.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Culture shock & embracing differences -->
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-rose-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-rose-500">
+                        <i class="fas fa-plane-arrival"></i> From shock to embracing new customs
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-rose-50 p-8 rounded-3xl border-2 border-rose-100">
+                            <p class="text-sm mb-3">
+                                Culture shock often starts with surprise or even discomfort, but many travelers later learn to embrace new customs. [web:136][web:140]
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• For a start, daily schedules and greetings can be very different from your own culture.</li>
+                                <li>• On the other hand, these differences can become valuable memories that you will never forget.</li>
+                                <li>• Over time, many people come to realize that respecting local customs is a sacred part of being a guest in another country.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                Combine <span class="font-bold">feeling words</span> (astonished, shocked) with <span class="font-bold">culture words</span> (custom, greeting, schedule)  
+                                to describe your own experiences of being \"shocked in Rome\" or in any new place.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-rose-400 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "When in Rome, do as the Romans do—but also notice how your own customs shape the way you see the world."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: Review 1 – When Shocked in Rome ---
+
+        const vocabulary = [
+            {
+                word: "custom",
+                pos: "n.",
+                def: "習俗",
+                family: "",
+                example: "In India, it’s a custom for people to put their hands together in front of their chest when they meet others.",
+                ch: "對印度的人們而言，當遇見別人時，將雙手一起放在胸前是一種習俗。"
+            },
+            {
+                word: "astonish",
+                pos: "v.",
+                def: "使驚訝",
+                family: "",
+                example: "It astonished the teacher that none of the students made a single mistake on the exam.",
+                ch: "沒有任何一位學生在考試中答錯，使得老師非常驚訝。"
+            },
+            {
+                word: "culture",
+                pos: "n.",
+                def: "文化",
+                family: "cultural (adj.)",
+                example: "In Central American culture, it’s believed that a girl becomes a woman on her fifteenth birthday.",
+                ch: "在中美洲的文化中，人們相信女孩在15歲生日當天轉變為一位女人。"
+            },
+            {
+                word: "greeting",
+                pos: "n.",
+                def: "招呼；迎接",
+                family: "greet (v.)",
+                example: "The new workers had ten minutes to introduce themselves and exchange greetings before the training began.",
+                ch: "這些新的員工，在訓練開始之前，有十分鐘自我介紹以及打招呼的時間。"
+            },
+            {
+                word: "grab",
+                pos: "v.",
+                def: "抓住；匆忙地拿",
+                family: "",
+                example: "Suddenly, Mike grabbed his girlfriend’s hand and asked her to marry him.",
+                ch: "突然間，Mike抓住他女友的手，並請她嫁給他。"
+            },
+            {
+                word: "valuable",
+                pos: "adj.",
+                def: "寶貴的",
+                family: "value (v./n.)",
+                example: "Those photos are valuable to Mandy because they remind her of her college life in the UK.",
+                ch: "那些照片對於Mandy來說是寶貴的，因為它們讓她想起她在英國的大學生活。"
+            },
+            {
+                word: "disappear",
+                pos: "v.",
+                def: "消失",
+                family: "",
+                example: "The moon went behind a cloud and disappeared from view.",
+                ch: "月亮跑到一朵雲後，就從視線中消失了。"
+            },
+            {
+                word: "afterward",
+                pos: "adv.",
+                def: "以後；後來",
+                family: "",
+                example: "We will go swimming at the beach and then go for a BBQ dinner afterward.",
+                ch: "我們將到海邊游泳，之後享用一場烤肉晚餐。"
+            },
+            {
+                word: "sacred",
+                pos: "adj.",
+                def: "神聖的",
+                family: "",
+                example: "Freedom is considered to be a sacred human right.",
+                ch: "自由被視為一項神聖人權。"
+            },
+            {
+                word: "daily",
+                pos: "adj./adv.",
+                def: "日常的；每天",
+                family: "",
+                example: "If you want to be healthier, you can make changes in your daily life, like going to sleep earlier.",
+                ch: "如果你想要健康一些，你可以在日常生活中做些改變，像是早點就寢。"
+            },
+            {
+                word: "schedule",
+                pos: "n.",
+                def: "行程",
+                family: "",
+                example: "Peter checks his schedule every morning so that he doesn’t forget any important events.",
+                ch: "Peter每天早上確認他的行程，以便他不會忘記任何重要的活動。"
+            },
+            {
+                word: "forever",
+                pos: "adv.",
+                def: "永遠；永久地",
+                family: "",
+                example: "During the wedding, the couple promised to love each other forever and ever.",
+                ch: "在婚禮中，這對夫妻承諾要永永遠遠愛著彼此。"
+            },
+            {
+                word: "include",
+                pos: "v.",
+                def: "包括",
+                family: "including (prep.)",
+                example: "Breakfast is included in the price of the room, so you don’t have to pay extra for it.",
+                ch: "早餐包含在房間的價格中，所以你不需要額外付費。"
+            },
+            {
+                word: "difference",
+                pos: "n.",
+                def: "差異；不同之處",
+                family: "",
+                example: "There is a big difference between the two sisters in the way they look and dress.",
+                ch: "這兩位姊妹在她們的外表和穿著上有很大的不同。"
+            },
+            {
+                word: "embrace",
+                pos: "v.",
+                def: "欣然接受；擁抱",
+                family: "",
+                example: "Sandra embraced her mom’s idea that she should find a new hobby, so now she’s learning to play the guitar.",
+                ch: "Sandra欣然接受她母親的想法，就是她應該找一個新的嗜好，所以她現在正在學彈吉他。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "except for", def: "除了……之外", example: "Sally liked the movie, except for when the hero died at the end." },
+            { phrase: "hand ... over (...)", def: "將……交給……", example: "Diane handed her ID over to the police officer and then waited while he examined it." },
+            { phrase: "for a start", def: "首先", example: "Summer is a wonderful time to visit Canada. For a start, the weather is warm." },
+            { phrase: "on the other hand", def: "另一方面", example: "Emily wants to buy the dress because it’s very cheap. On the other hand, she knows she already has too many dresses." },
+            { phrase: "all the way", def: "一直到某時；一路到某地", example: "The two skiers raced each other all the way to the bottom of the mountain." },
+            { phrase: "get off (work)", def: "下班", example: "Tyler doesn’t get off work until 11:00 p.m. on Fridays." },
+            { phrase: "be known as", def: "被稱為", example: "Although Robin is now known as a journalist, she was a singer in her teens." },
+            { phrase: "come to realize", def: "開始理解", example: "I have come to realize that we just can’t get along." }
+        ];
+
+        // Quiz questions – culture shock, customs, connectors
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which sentence best describes a typical culture shock situation?",
+                options: [
+                    "Peter checks his schedule every morning so that he doesn’t forget any important events.",
+                    "A visitor to Rome is astonished when a stranger suddenly grabs their hand in a friendly greeting.",
+                    "Breakfast is included in the price of the room.",
+                    "The couple promised to love each other forever and ever."
+                ],
+                correct: 1,
+                explanation: "Culture shock often comes from surprising customs or greetings that are different from what visitors expect. [web:136][web:140][web:143]"
+            },
+            {
+                type: "mc",
+                q: "Which pair of sentences uses \"for a start\" and \"on the other hand\" most naturally?",
+                options: [
+                    "For a start, I like Italian food, on the other hand, pizza is delicious.",
+                    "For a start, the city’s history is fascinating. On the other hand, the daily schedule is very different from mine.",
+                    "For a start, the schedule is different, on the other hand, the schedule is not the same.",
+                    "For a start, I get off work late on Fridays on the other hand all the way home is quiet."
+                ],
+                correct: 1,
+                explanation: "Each expression introduces a clear, separate point: one positive, one contrasting difficulty. [web:136][web:139]"
+            },
+            {
+                type: "error",
+                q: "Which part of the sentence needs to be changed? \"Except from the strange greeting customs, I enjoyed my trip to Rome.\"",
+                options: ["Except from", "strange greeting customs", "enjoyed my trip", "to Rome"],
+                correct: 0,
+                fix: "Except for",
+                explanation: "We say \"except for\" to introduce the only thing that is different from the rest."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best shows how a person’s feelings can change over time?",
+                options: [
+                    "I come to realize that Rome is a big city.",
+                    "I will come to realize that Rome is far away from my home.",
+                    "I have come to realize that the customs that shocked me at first are now valuable parts of my daily life.",
+                    "I am come to realize that Rome is sacred."
+                ],
+                correct: 2,
+                explanation: "\"Have come to realize\" shows a slow change in understanding, which fits the idea of adapting to new customs. [web:136][web:140]"
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"In some ______, it is a custom to greet people with a kiss on both cheeks.\"",
+                answer: "cultures",
+                hint: "c _ l _ u r _ s",
+                explanation: "We use the plural \"cultures\" to talk about different groups and their customs."
+            },
+            {
+                type: "mc",
+                q: "Which sentence uses \"be known as\" correctly?",
+                options: [
+                    "Rome known as the Eternal City.",
+                    "Rome is known as the Eternal City because of its long and sacred history.",
+                    "Rome is known as for its schedule.",
+                    "Rome is known as to be very daily."
+                ],
+                correct: 1,
+                explanation: "\"Be known as + noun\" introduces the role or name that people use for someone or something."
+            },
+            {
+                type: "error",
+                q: "Which word form is wrong? \"Their difference daily schedules made it hard for them to spend time together.\"",
+                options: ["Their", "difference", "daily schedules", "made it hard"],
+                correct: 1,
+                fix: "different",
+                explanation: "We need the adjective \"different\" before a plural noun: \"their different daily schedules\"."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best fits the idea of embracing new customs?",
+                options: [
+                    "Sandra was shocked by every custom and refused to change her daily schedule.",
+                    "Sandra disappeared from the group afterward.",
+                    "Sandra embraced the local custom of eating late dinners, even though it was very different from her schedule.",
+                    "Sandra checked her schedule every morning."
+                ],
+                correct: 2,
+                explanation: "To \"embrace\" a custom means to accept it willingly and see it as valuable."
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"During my time in Rome, I will never forget the ______ I received from local people at their homes.\"",
+                answer: "greetings",
+                hint: "g _ e _ t _ n g s",
+                explanation: "\"Greetings\" refers to the ways people welcomed or said hello to the visitor."
+            },
+            {
+                type: "mc",
+                q: "Which option completes the sentence in the most natural way? \"For a start, I was shocked by the different customs; ______, I slowly began to value them.\"",
+                options: ["except for", "afterward", "on the other hand", "all the way"],
+                correct: 1,
+                explanation: "\"Afterward\" shows the time order: first shock, then gradual acceptance."
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-rose-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-rose-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Well done!" : "💡 Take another look";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 4000);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Review Master! 🏆", msg: "You can now talk clearly about culture shock, customs, and contrasting ideas in English.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You handle review vocabulary and connectors well. Try writing a short paragraph about your own ‘When shocked in Rome’ moment.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the idioms and key words, then try the challenge again to build your confidence.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Focus on a few core expressions like \"for a start\" and \"on the other hand\"—they will make your ideas sound more organized.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>
