@@ -17,6 +17,21 @@
       padding: 40px 20px 20px;
       background: #ffffffaa;
     }
+    /* 新增：標題＋圖片的排版 */
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .title-image {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
     h1 {
       margin: 0 0 10px;
       font-size: 2rem;
@@ -85,8 +100,14 @@
 </head>
 <body>
   <header>
-    <h1>Book 1 Let's Review the lessons with Janelle</h1>
-    <p class="subtitle">Lessons &amp; Reviews｜清楚導航，快速找到對應單元</p>
+    <div class="title-wrap">
+      <!-- 插圖：與 index.html 同資料夾 -->
+      <img src="Janelle去背.png" alt="Book 1 封面與 Janelle" class="title-image">
+      <div>
+        <h1>Book 1 Let's Review the lessons with Janelle</h1>
+        <p class="subtitle">Lessons &amp; Reviews｜清楚導航，快速找到對應單元</p>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -150,10 +171,7 @@
   </main>
 
   <footer>
-    Book 1 https://janetchang-mit.github.io/Book-1-Review/ · 目錄頁（index.html）
+    Book 1 <a href="https://janetchang-mit.github.io/Book-1-Review/">https://janetchang-mit.github.io/Book-1-Review/</a> · 目錄頁（index.html）
   </footer>
 </body>
 </html>
-
-
-
