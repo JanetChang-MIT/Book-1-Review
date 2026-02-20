@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up: Do Animals Sleep like You and Me? | B1U3 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #fff7ed 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #f97316; color: white; border-color: #fb923c; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-orange-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-paw fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+                    Level Up: Do Animals Sleep like You and Me?
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-orange-400"></i> B1 Reading & Vocabulary Dashboard – Unit 3
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-orange-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Patterns
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Ultimate Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-orange-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-orange-100 font-black text-9xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-orange-100 text-orange-600 font-black text-xs uppercase tracking-widest mb-4">v.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-2">wonder</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-4">想知道</h3>
+                            
+                            <p id="vocab-family" class="text-sm text-slate-400 mb-6 italic"></p>
+
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-orange-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-orange-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-orange-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-orange-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 18</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-orange-500 shadow-xl flex items-center justify-center text-white hover:bg-orange-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <!-- wh- clause pattern -->
+                <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">S + V + wh- (+ S) + V...</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-orange-300 flex items-center gap-2 mb-4"><i class="fas fa-lightbulb"></i> Pattern</h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                Use a <span class="text-orange-300 font-bold">wh-word</span> (how, what, where, why...) to introduce a clause as the object of the verb.
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• Have you ever <span class="text-orange-300 font-bold">wondered how</span> other animals sleep?</li>
+                                <li>• The wide variety of sleeping habits shows <span class="text-orange-300 font-bold">how different creatures have different ways</span> of avoiding danger.</li>
+                                <li>• I don’t know <span class="text-orange-300 font-bold">why</span> dolphins sleep that way.</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Common Mistakes</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> I wonder how do animals sleep.</p>
+                                <p><span class="text-green-300 font-black">✓</span> I wonder how animals sleep.</p>
+                                <p class="mt-2 text-xs text-indigo-100">Remember: in the wh-clause, we use normal word order (S + V), not question order.</p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> The variety shows how do creatures avoid danger.</p>
+                                <p><span class="text-green-300 font-black">✓</span> The variety shows how creatures avoid danger.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important sentences / linking verbs -->
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-indigo-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-orange-500">
+                        <i class="fas fa-bolt"></i> Important Sentences from the Unit
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-orange-50 p-8 rounded-3xl border-2 border-orange-100">
+                            <h5 class="font-black text-orange-600 mb-4 text-xl underline">Linking Verbs: seem / stay</h5>
+                            <p class="text-sm mb-3">
+                                <span class="font-bold">seem</span> and <span class="font-bold">stay</span> are linking verbs. They are followed by an adjective that describes the subject.
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• The sleeping habits of these animals <span class="font-bold">seem amazing</span>.</li>
+                                <li>• One half of the brain <span class="font-bold">stays awake</span> to help them survive.</li>
+                                <li>• She <span class="font-bold">seems tired</span> after the long journey.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s Tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                Pay attention to survival verbs and patterns in this unit: 
+                                <span class="font-bold">hold on to</span>, <span class="font-bold">look out for</span>, 
+                                and <span class="font-bold">be on the lookout for</span> all show how animals avoid danger.
+                                Use these phrases when you describe animals or people staying safe.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-orange-400 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "When you read about animals, notice the verbs: how they sleep, survive, travel, and avoid danger. These verbs are powerful tools for your own writing."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: B1 U3 Do Animals Sleep like You and Me? ---
+
+        const vocabulary = [
+            {
+                word: "wonder",
+                pos: "v.",
+                def: "想知道",
+                family: "",
+                example: "Samuel wonders if he will lose some weight after he joins the swimming club.",
+                ch: "Samuel想知道他加入游泳社之後，是否就能減重。"
+            },
+            {
+                word: "amazing",
+                pos: "adj.",
+                def: "令人大感驚奇的",
+                family: "amaze (v.), amazement (n.)",
+                example: "It’s amazing how bright the stars are outside of the city at night!",
+                ch: "城市外夜晚的星星如此明亮，令人驚奇！"
+            },
+            {
+                word: "average",
+                pos: "n./adj.",
+                def: "平均；平均的",
+                family: "",
+                example: "Helen usually scores above average on her exams because she always studies much harder than her classmates.",
+                ch: "Helen的考試成績通常高於班平均，因為她總是比同學更加用功得多。"
+            },
+            {
+                word: "therefore",
+                pos: "adv.",
+                def: "因此",
+                family: "",
+                example: "The boots were much more expensive than Tina had expected; therefore, she didn’t buy them.",
+                ch: "這雙靴子比Tina預期的貴上許多，因此，她就沒買了。"
+            },
+            {
+                word: "nap",
+                pos: "v./n.",
+                def: "小睡",
+                family: "",
+                example: "Craig has a bad habit of staying up late and then napping several times during the day.",
+                ch: "Craig有個壞習慣，常熬夜到很晚然後白天得小睡好幾次。"
+            },
+            {
+                word: "float",
+                pos: "v.",
+                def: "漂浮；漂流；飄動",
+                family: "",
+                example: "Jenna threw a piece of bread into the pond and watched it float until a fish ate it.",
+                ch: "Jenna丟了一小片麵包到池塘裡，看著它漂在水面直到被魚吃掉。"
+            },
+            {
+                word: "avoid",
+                pos: "v.",
+                def: "避免",
+                family: "",
+                example: "The family avoided getting stuck in the traffic jam by leaving home very early in the morning.",
+                ch: "這家人早上很早就出門，以免塞在車陣中。"
+            },
+            {
+                word: "surface",
+                pos: "n.",
+                def: "（水、地板等）表面",
+                family: "",
+                example: "When too many people boarded the little boat, it began to sink below the surface of the water.",
+                ch: "太多人上了那艘小船，導致船身開始沉到水面下。"
+            },
+            {
+                word: "breathe",
+                pos: "v.",
+                def: "呼吸",
+                family: "breath (n.)",
+                example: "The yoga teacher told her students to breathe in as they lifted their arms above their heads.",
+                ch: "瑜珈老師要學員們將手臂高舉過頭的同時一邊吸氣。"
+            },
+            {
+                word: "awake",
+                pos: "adj./v.",
+                def: "醒著的；醒來；喚醒",
+                family: "",
+                example: "The loud music from the neighbors’ party kept the whole family awake all night.",
+                ch: "鄰居派對的音樂聲太吵，讓這家人整夜睡不著。"
+            },
+            {
+                word: "impressive",
+                pos: "adj.",
+                def: "令人印象深刻的",
+                family: "impress (v.), impression (n.)",
+                example: "It’s so impressive that Brian can say “hello” and “thank you” in more than fifteen languages!",
+                ch: "Brian能用超過十五種語言說「哈囉」和「謝謝你」，十分令人印象深刻。"
+            },
+            {
+                word: "distance",
+                pos: "n.",
+                def: "距離",
+                family: "distant (adj.)",
+                example: "The distance between the eastern end of Russia and the western one is about ten thousand kilometers.",
+                ch: "俄羅斯東西兩端的距離大約是一萬公里。"
+            },
+            {
+                word: "journey",
+                pos: "n.",
+                def: "旅行",
+                family: "",
+                example: "After high school, the two best friends plan to go on a journey around the world.",
+                ch: "高中畢業後，這兩位最要好的朋友計畫要去環遊世界。"
+            },
+            {
+                word: "flight",
+                pos: "n.",
+                def: "飛行；航班",
+                family: "",
+                example: "Baby birds usually take flight for the first time after they are only about two or three weeks old.",
+                ch: "幼鳥通常在約只有兩三週大時首次飛行。"
+            },
+            {
+                word: "variety",
+                pos: "n.",
+                def: "多種樣式、變化",
+                family: "vary (v.), various (adj.)",
+                example: "That store sells a wide variety of children’s toys and books.",
+                ch: "那間店販售各式各樣的童玩與童書。"
+            },
+            {
+                word: "creature",
+                pos: "n.",
+                def: "生物",
+                family: "",
+                example: "Nick is kind-hearted. He wouldn’t hurt any living creature, not even a mosquito.",
+                ch: "Nick心地善良，不會傷害任何生物，連蚊子都不會。"
+            },
+            {
+                word: "expert",
+                pos: "n.",
+                def: "專家；行家",
+                family: "",
+                example: "Mr. Yang is an expert in math. I’m glad to have him as my tutor.",
+                ch: "楊先生是一位數學專家，我很高興有他當我的家教。"
+            },
+            {
+                word: "survive",
+                pos: "v.",
+                def: "生存；倖存",
+                family: "survival (n.)",
+                example: "Some animals are able to survive from season to season by changing the color of their fur.",
+                ch: "有些動物靠著改變體毛的顏色，安然度過不同季節。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "hold on to", def: "緊緊抓住", example: "It is a good idea to hold on to one of the poles while you are standing on a moving bus." },
+            { phrase: "look out for", def: "當心……出現", example: "Make sure to look out for bees when you go hiking in the forest." },
+            { phrase: "be on the lookout for", def: "保持警戒；當心……出現", example: "Be on the lookout for falling rocks when you drive through the mountains after a rainstorm." },
+            { phrase: "for example", def: "舉例來說", example: "Katie has a really good memory. For example, she can memorize a short passage after she reads it once." },
+            { phrase: "according to", def: "根據", example: "According to this news report, the whole village was ruined by the earthquake." },
+            { phrase: "up to", def: "高達", example: "Amazingly, some swimmers can hold their breath for up to twenty minutes." }
+        ];
+
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which word best fits? \"Have you ever ______ how other animals sleep?\"",
+                options: ["floated", "wondered", "avoided", "survived"],
+                correct: 1,
+                explanation: "\"Wonder\" means to want to know or think about something with curiosity."
+            },
+            {
+                type: "mc",
+                q: "Which sentence correctly uses \"average\"?",
+                options: [
+                    "Giraffes sleep thirty minutes on average each week.",
+                    "Giraffes sleep average thirty minutes on day.",
+                    "Giraffes are average sleep animals.",
+                    "Giraffes sleep the average on minutes."
+                ],
+                correct: 0,
+                explanation: "We say \"on average\" to talk about a typical or usual amount."
+            },
+            {
+                type: "error",
+                q: "Find the error: \"The otter holds on the seaweed to avoid to float away while it sleeps.\"",
+                options: ["holds on", "the seaweed", "avoid to float", "while it sleeps"],
+                correct: 2,
+                fix: "avoid floating",
+                explanation: "After \"avoid\", use V-ing: avoid floating away."
+            },
+            {
+                type: "mc",
+                q: "Which phrase means \"to stay ready and watch carefully\"?",
+                options: ["for example", "up to", "according to", "be on the lookout for"],
+                correct: 3,
+                explanation: "\"Be on the lookout for\" means to stay alert and watch for something."
+            },
+            {
+                type: "type",
+                q: "Vocabulary: \"Baby birds usually take ______ for the first time after they are only two or three weeks old.\"",
+                answer: "flight",
+                hint: "f _ _ _ t",
+                explanation: "\"Take flight\" means to begin flying."
+            },
+            {
+                type: "mc",
+                q: "Which word is most suitable? \"These dolphins’ sleeping habits are really ______.\"",
+                options: ["distant", "impressive", "average", "awake"],
+                correct: 1,
+                explanation: "\"Impressive\" means something is special and makes you admire it."
+            },
+            {
+                type: "error",
+                q: "Spot the mistake: \"I wonder how do animals survive in such cold weather.\"",
+                options: ["I wonder", "how do animals survive", "in such cold weather", "no mistake"],
+                correct: 1,
+                fix: "how animals survive",
+                explanation: "In a wh-clause after \"wonder\", use normal S + V order: how animals survive."
+            },
+            {
+                type: "mc",
+                q: "Which sentence correctly uses \"according to\"?",
+                options: [
+                    "According to the experts, some animals sleep while they are flying.",
+                    "The experts according to say animals sleep flying.",
+                    "According the experts to, animals sleep fly.",
+                    "According to, experts animals flying sleep."
+                ],
+                correct: 0,
+                explanation: "\"According to + person/source\" is used to show where the information comes from."
+            },
+            {
+                type: "type",
+                q: "Word family: \"That store sells a wide ______ of children’s toys and books.\"",
+                answer: "variety",
+                hint: "v _ _ _ _ _ y",
+                explanation: "\"A wide variety of\" means many different kinds of something."
+            },
+            {
+                type: "mc",
+                q: "Which sentence shows the idea of survival correctly?",
+                options: [
+                    "Some animals survive by changing the color of their fur.",
+                    "Some animals survive to changing the color of their fur.",
+                    "Some animals are survive by change color.",
+                    "Some animals are survival changing color."
+                ],
+                correct: 0,
+                explanation: "\"Survive by + V-ing\" is a common pattern to explain how an animal or person stays alive."
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-orange-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-orange-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Great job!" : "💡 Let’s learn from this";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 3500);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Unit Master! 🏆", msg: "You fully understand the key words, phrases, and patterns in this unit.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You are ready to use this language when you talk about animals and sleep.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the vocabulary cards and try the quiz one more time.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Spend more time with the Lexicon and Grammar tabs, then retake the challenge.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up: Goodbye, John | B1 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #fff7ed 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #f97316; color: white; border-color: #fb923c; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-orange-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-book-open fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+                    Level Up: Goodbye, John
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-orange-400"></i> B1 Reading & Vocabulary Dashboard
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-orange-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Patterns
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Ultimate Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-orange-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-orange-100 font-black text-9xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-orange-100 text-orange-600 font-black text-xs uppercase tracking-widest mb-4">n.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-2">relationship</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-4">戀愛關係；關係</h3>
+                            
+                            <p id="vocab-family" class="text-sm text-slate-400 mb-6 italic"></p>
+
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-orange-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-orange-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-orange-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-orange-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 17</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-orange-500 shadow-xl flex items-center justify-center text-white hover:bg-orange-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">It is + adj. (+ for sb.) + to VR...</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-orange-300 flex items-center gap-2 mb-4"><i class="fas fa-lightbulb"></i> Pattern</h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                It is + <span class="text-orange-300 font-bold">adjective</span> (+ for someone) + <span class="text-orange-300 font-bold">to V</span>.
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• It is <span class="text-orange-300 font-bold">not easy</span> to tell you this.</li>
+                                <li>• It is <span class="text-orange-300 font-bold">difficult for me</span> to focus on school.</li>
+                                <li>• It is <span class="text-orange-300 font-bold">important for teens</span> to communicate with their parents.</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Common Mistakes</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> I am difficult to focus on school.</p>
+                                <p><span class="text-green-300 font-black">✓</span> It is difficult for me to focus on school.</p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> It is important teens to communicate.</p>
+                                <p><span class="text-green-300 font-black">✓</span> It is important <span class="underline">for teens</span> to communicate.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-indigo-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-orange-500"><i class="fas fa-bolt"></i> Busy + V-ing Essentials</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-orange-50 p-8 rounded-3xl border-2 border-orange-100">
+                            <h5 class="font-black text-orange-600 mb-4 text-xl underline">be busy + V-ing</h5>
+                            <p class="text-sm mb-3">Use V-ing after <span class="font-bold text-orange-600">busy</span> to talk about what someone is doing.</p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• She is busy <span class="font-bold">studying</span> for the test.</li>
+                                <li>• They are busy <span class="font-bold">preparing</span> for the party.</li>
+                                <li>• I am too busy <span class="font-bold">paying</span> attention to you.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s Tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                Remember these “Important Sentences” from the unit: use <span class="font-bold">be afraid of / be afraid to V / be afraid that...</span>, 
+                                and use <span class="font-bold">stop to V</span> (to do something new) vs. <span class="font-bold">stop V-ing</span> (finish an action).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-orange-400 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "Don’t just remember the word. Notice its word family, sentence pattern, and typical collocations."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: B1 U2 Goodbye, John ---
+
+        const vocabulary = [
+            {
+                word: "relationship",
+                pos: "n.",
+                def: "戀愛關係；關係",
+                family: "relation (n.), relate (v.)",
+                example: "Marc and Amy have been in a relationship since their first date four years ago.",
+                ch: "自從四年前第一次約會後，Marc和Amy就持續交往中。"
+            },
+            {
+                word: "satisfying",
+                pos: "adj.",
+                def: "令人滿意的",
+                family: "satisfy (v.), satisfaction (n.)",
+                example: "Billy thinks it is satisfying to drink a big cup of iced tea after he exercises.",
+                ch: "Billy覺得運動後喝一大杯冰茶是很滿足的。"
+            },
+            {
+                word: "inspire",
+                pos: "v.",
+                def: "激勵；激發靈感",
+                family: "inspiration (n.)",
+                example: "The superheroine Wonder Woman has inspired a lot of girls with her bravery and strength.",
+                ch: "超級女英雄的神力女超人以其勇氣與力量鼓舞了許多女生。"
+            },
+            {
+                word: "connect",
+                pos: "v.",
+                def: "與他人建立良好關係；連接",
+                family: "connection (n.)",
+                example: "The two friends connected with each other when they rode their bikes around the country together.",
+                ch: "這兩個朋友在一起單車環繞全國旅行時建立了良好關係。"
+            },
+            {
+                word: "communicate",
+                pos: "v.",
+                def: "溝通",
+                family: "communication (n.)",
+                example: "The Internet allows us to communicate quickly and easily with people all over the world.",
+                ch: "網路讓我們輕易且快速地與世界各地的人溝通。"
+            },
+            {
+                word: "introduce",
+                pos: "v.",
+                def: "使某人初次體驗；介紹",
+                family: "introduction (n.)",
+                example: "This two-minute video introduces the public to the latest iPhone and its new features.",
+                ch: "這段兩分鐘的影片讓大眾初次體驗最新型的iPhone及其新的特色。"
+            },
+            {
+                word: "throughout",
+                pos: "prep.",
+                def: "自始至終；遍及",
+                family: "",
+                example: "In some countries, like Singapore, the weather stays hot throughout the year.",
+                ch: "某些國家，如新加坡，天氣一整年都很熱。"
+            },
+            {
+                word: "message",
+                pos: "n.",
+                def: "訊息",
+                family: "",
+                example: "Kylie sent a text message to her boss to tell him that she would be ten minutes late for work.",
+                ch: "Kylie發了通簡訊給老闆，告訴他她上班會晚十分鐘到。"
+            },
+            {
+                word: "refresh",
+                pos: "v.",
+                def: "刷新；使恢復精神",
+                family: "",
+                example: "Olivia refreshed her Facebook Feed to check for new posts from her friends.",
+                ch: "Olivia更新她臉書的即時動態，看看她朋友們有沒有貼新的消息。"
+            },
+            {
+                word: "romantic",
+                pos: "adj.",
+                def: "浪漫的；愛情的",
+                family: "romance (n.)",
+                example: "Nicole and Sam were just friends for many years and never developed a romantic relationship.",
+                ch: "Nicole和Sam多年來都只是朋友，從沒有發展出戀愛關係。"
+            },
+            {
+                word: "focus",
+                pos: "v./n.",
+                def: "專注；關注的人或事物",
+                family: "",
+                example: "Jason couldn’t focus on the action in the movie because he was trying to read the words on the screen.",
+                ch: "Jason沒辦法專心看電影裡的畫面，因為他在努力地看字幕。"
+            },
+            {
+                word: "ignore",
+                pos: "v.",
+                def: "忽略",
+                family: "ignorance (n.)",
+                example: "Grace totally ignored her younger brother as he made silly faces at her.",
+                ch: "當Grace的弟弟對她做鬼臉時，她完全不理會。"
+            },
+            {
+                word: "attention",
+                pos: "n.",
+                def: "注意力",
+                family: "",
+                example: "The article draws our attention to the importance of being good parents in today’s world.",
+                ch: "這篇文章讓我們注意到在現今世界當好父母的重要性。"
+            },
+            {
+                word: "deny",
+                pos: "v.",
+                def: "否認",
+                family: "",
+                example: "Mr. Lin denied giving a box of candy to his daughter, but Mrs. Lin didn’t believe him.",
+                ch: "林先生否認拿了一盒糖果給女兒，但林太太不相信他。"
+            },
+            {
+                word: "respond",
+                pos: "v.",
+                def: "回應",
+                family: "response (n.)",
+                example: "Chris responded to his mom’s Facebook message with a smiling cat sticker.",
+                ch: "Chris用一個貓咪微笑的貼圖回應他母親的臉書訊息。"
+            },
+            {
+                word: "disappointed",
+                pos: "adj.",
+                def: "感到失望的",
+                family: "disappoint (v.), disappointment (n.)",
+                example: "Fiona was really disappointed that her favorite character died at the end of the movie.",
+                ch: "Fiona對於她最喜愛的角色在電影的最後死了感到很失望。"
+            },
+            {
+                word: "personally",
+                pos: "adv.",
+                def: "針對某人地；就個人而言",
+                family: "personal (adj.)",
+                example: "Please don’t take my comment personally. I’m complaining about all the drivers in our country, not just you.",
+                ch: "請不要認為我的評語是針對你個人。我是在抱怨整個國家的所有司機，不是只有你。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "in fact", def: "事實上", example: "December is not cold in Australia. In fact, it’s the middle of summer." },
+            { phrase: "go through", def: "徹底讀過", example: "Bill is going through the list of winners to see if he is one of them." },
+            { phrase: "in case", def: "以防萬一", example: "Each of the hikers brought an umbrella and a raincoat in case it rained." },
+            { phrase: "in addition", def: "除此之外", example: "Please remember to bring a snack to the party. In addition, you should bring a gift for the birthday boy." },
+            { phrase: "hang out", def: "（與某人）一起出去、廝混", example: "Alice and her friends always hang out in a café after school on Fridays." },
+            { phrase: "turn to", def: "轉向（某人）；求助於（某人）", example: "Tracy always turns to her older sister Ivy when she has a problem with one of her friends." },
+            { phrase: "take…personally", def: "認為……是針對個人；對……感到不悅", example: "Please don’t take this personally, but I don’t like your shirt." }
+        ];
+
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which word best completes the sentence? \"Our __________ has been mostly satisfying, but I’m afraid it’s over.\"",
+                options: ["attention", "relationship", "message", "connection"],
+                correct: 1,
+                explanation: "\"Relationship\" is used to talk about a romantic or close connection between two people."
+            },
+            {
+                type: "mc",
+                q: "Which sentence uses \"focus\" correctly?",
+                options: [
+                    "I focus the teacher my question.",
+                    "It is difficult for me to focus on school these days.",
+                    "He focused me personally.",
+                    "They focus with each other throughout the year."
+                ],
+                correct: 1,
+                explanation: "\"Focus on\" is the correct collocation: focus on school / focus on the movie / focus on your work."
+            },
+            {
+                type: "error",
+                q: "Find the error: \"I am too busy pay attention to you.\"",
+                options: ["am too busy", "pay attention", "to you", "the sentence is correct"],
+                correct: 1,
+                fix: "paying attention",
+                explanation: "After \"busy\", we use V-ing: be busy doing something → busy paying attention."
+            },
+            {
+                type: "mc",
+                q: "Which idiom means \"to spend time relaxing with friends\"?",
+                options: ["turn to", "hang out", "in fact", "in case"],
+                correct: 1,
+                explanation: "\"Hang out\" means to spend time with someone in a relaxed way."
+            },
+            {
+                type: "type",
+                q: "Vocabulary: \"I didn't mean to hurt you. Please don't take my words __________.\"",
+                answer: "personally",
+                hint: "p _ _ _ _ _ _ _ _ y",
+                explanation: "\"Take something personally\" means to feel that something is directed at you in a negative way."
+            },
+            {
+                type: "mc",
+                q: "Which word best fits? \"The Internet makes it easier for us to __________ with people all over the world.\"",
+                options: ["deny", "ignore", "communicate", "refresh"],
+                correct: 2,
+                explanation: "\"Communicate with\" is used to talk about sharing ideas or information with others."
+            },
+            {
+                type: "error",
+                q: "Spot the mistake: \"Please don’t take my comment personal.\"",
+                options: ["don’t take", "my comment", "personal", "no mistake"],
+                correct: 2,
+                fix: "personally",
+                explanation: "We say \"take something personally\" (adverb), not \"take something personal\"."
+            },
+            {
+                type: "mc",
+                q: "Which word completes the sentence? \"Fiona was really __________ that her favorite character died at the end of the movie.\"",
+                options: ["romantic", "refreshed", "satisfying", "disappointed"],
+                correct: 3,
+                explanation: "\"Disappointed\" is the adjective used to describe feeling sad because something did not happen as hoped."
+            },
+            {
+                type: "type",
+                q: "Word family: \"Tracy always __________ to her sister when she has a problem.\" (use the correct verb form)",
+                answer: "turns",
+                hint: "t _ _ _ s",
+                explanation: "With \"Tracy\" (he/she), we use the -s form in the simple present: turns to."
+            },
+            {
+                type: "mc",
+                q: "Which sentence shows the correct use of \"in case\"?",
+                options: [
+                    "In case it is raining, we forgot our umbrellas.",
+                    "Bring a jacket in case it gets cold tonight.",
+                    "He is in case tired today.",
+                    "I in case go through the list."
+                ],
+                correct: 1,
+                explanation: "\"In case\" is used before a clause to talk about something that might happen: in case it gets cold."
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-orange-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-orange-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Great job!" : "💡 Let’s learn from this";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 3500);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Unit Master! 🏆", msg: "You fully understand the key words, phrases, and patterns in this unit.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You are ready to use this language in real conversations.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the vocabulary cards and try the quiz one more time.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Spend more time with the Lexicon and Grammar tabs, then retake the challenge.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>

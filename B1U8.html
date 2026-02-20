@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up: Convenience Stores | B1U8 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #fee2e2 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #f97316; color: white; border-color: #fb923c; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-store fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 bg-clip-text text-transparent">
+                    Level Up: Convenience Stores – Open Wallets
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-rose-400"></i> B1 Reading & Vocabulary Dashboard – Unit 8
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-rose-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-rose-400 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Patterns
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Ultimate Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-rose-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-rose-100 font-black text-8xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-rose-100 text-rose-600 font-black text-xs uppercase tracking-widest mb-3">adj.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-1">familiar</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-2">熟悉的</h3>
+                            <p id="vocab-family" class="text-sm md:text-base text-slate-500 mb-6 italic"></p>
+                            
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-rose-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-rose-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-rose-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 17</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-rose-500 shadow-xl flex items-center justify-center text-white hover:bg-rose-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <!-- Focus: The + comparative + S + V..., the + comparative + S + V... -->
+                <div class="bg-gradient-to-br from-indigo-900 to-rose-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">The more..., the more...</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-rose-300 flex items-center gap-2 mb-4">
+                                <i class="fas fa-lightbulb"></i> Showing cause and effect
+                            </h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                We use <span class="text-rose-300 font-bold">the + comparative + S + V, the + comparative + S + V</span>  
+                                to show how one change causes another change. [web:124]
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• The more visible the products are, the easier it is for shoppers to notice and purchase them.</li>
+                                <li>• The longer people stay inside, the more products they buy.</li>
+                                <li>• The more special offers we see near the cash register, the stronger our impulse to buy small goodies becomes. [web:120][web:122]</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Form & typical mistakes</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> More the products are visible, more the customers buy.</p>
+                                <p><span class="text-green-300 font-black">✓</span> <span class="underline">The more visible the products are, the more customers buy.</span></p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    Each half begins with <span class="font-bold">the</span> + comparative form. We do not move \"the\" to the middle of the clause.
+                                </p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> The more I look at the display, more I want to buy.</p>
+                                <p><span class="text-green-300 font-black">✓</span> The more I look at the display, <span class="underline">the more</span> I want to buy.</p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    Repeat \"the\" in both parts: <span class="font-bold">the more..., the more...</span> or <span class="font-bold">the more..., the less...</span>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Talking about shopping tricks and awareness -->
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-rose-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-rose-500">
+                        <i class="fas fa-shopping-basket"></i> Shopping smart, not just often
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-rose-50 p-8 rounded-3xl border-2 border-rose-100">
+                            <p class="text-sm mb-3">
+                                This unit links vocabulary about <span class="font-bold">impulse</span>, <span class="font-bold">offers</span>, and <span class="font-bold">traps</span> with ideas about awareness and self‑control. [web:120][web:122]
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• The more eye‑catching the display is, the more likely customers are to buy on impulse.</li>
+                                <li>• Products set up within arm’s reach of children can give stores a big advantage, but they may be a trap for parents.</li>
+                                <li>• The more aware you are of these strategies, the less embarrassed you feel about your shopping habits.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                Try to combine one <span class="font-bold">marketing word</span> (offer, display, advantage)  
+                                with one <span class="font-bold">feeling word</span> (urge, impulse, awareness) when you describe convenience stores.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-rose-400 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "Stores use clever strategies. The more aware you are of them, the more control you keep over your wallet."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: B1 U8 Convenience Stores ---
+
+        const vocabulary = [
+            {
+                word: "familiar",
+                pos: "adj.",
+                def: "熟悉的",
+                family: "",
+                example: "Japanese cartoon characters such as Doraemon, Pikachu, and Totoro are familiar to kids all over the world.",
+                ch: "日本卡通人物，像是多啦A夢、皮卡丘和龍貓，全世界的小孩子都熟悉。"
+            },
+            {
+                word: "urge",
+                pos: "n./v.",
+                def: "衝動；催促",
+                family: "",
+                example: "Jason had an urge to change his daily routine, so he went swimming after work instead of going straight home.",
+                ch: "Jason有一股衝動想改變他的每天例行公事，所以他下班後去游泳，而沒有直接回家。"
+            },
+            {
+                word: "strategy",
+                pos: "n.",
+                def: "策略",
+                family: "",
+                example: "The salesman’s strategy for closing a deal is to describe the features that make his products better than other companies’.",
+                ch: "這個業務達成買賣的策略是，描述比其他公司好的產品特色。"
+            },
+            {
+                word: "visible",
+                pos: "adj.",
+                def: "看得見的",
+                family: "",
+                example: "In the sky there are 9,096 stars that are visible to the naked eye.",
+                ch: "天空中有9,096顆星星是肉眼可以看見的。"
+            },
+            {
+                word: "purchase",
+                pos: "v./n.",
+                def: "購買",
+                family: "",
+                example: "Many people like to purchase goods inside international airports because they don’t need to pay taxes.",
+                ch: "許多人喜歡在國際機場內購買商品，因為他們不需付稅金。"
+            },
+            {
+                word: "profitable",
+                pos: "adj.",
+                def: "有利潤的",
+                family: "profit (n./v.)",
+                example: "The locals that live near this harbor have opened several highly profitable seafood restaurants.",
+                ch: "住在這個港口附近的當地人已經開了幾家高利潤的海產餐廳。"
+            },
+            {
+                word: "similarly",
+                pos: "adv.",
+                def: "同樣地；相似地",
+                family: "similar (adj.), similarity (n.)",
+                example: "Many Arctic birds fly south when winter approaches. Similarly, monarch butterflies fly to warmer places during the cold season.",
+                ch: "許多極地地區的鳥在冬天來臨時飛往南方。同樣地，帝王斑蝶會在寒冷的季節期間，飛到比較溫暖的地方。"
+            },
+            {
+                word: "aim",
+                pos: "v./n.",
+                def: "針對；目的；目標",
+                family: "",
+                example: "This picture book is aimed primarily at children under the age of five.",
+                ch: "這本繪本主要針對五歲以下的兒童。"
+            },
+            {
+                word: "impulse",
+                pos: "n.",
+                def: "衝動",
+                family: "",
+                example: "Kate bought an expensive pair of shoes on impulse but later realized she didn’t need them.",
+                ch: "Kate在衝動之下買了一雙很貴的鞋，但後來了解到她並不需要它們。"
+            },
+            {
+                word: "display",
+                pos: "v./n.",
+                def: "展示；陳列；展覽",
+                family: "",
+                example: "The scooter shop displays some of its most popular models on the front sidewalk to attract potential buyers.",
+                ch: "這間機車行在店前的人行道上展示一些最受歡迎的機車車種，以吸引可能的買家。"
+            },
+            {
+                word: "offer",
+                pos: "n./v.",
+                def: "特價；提供",
+                family: "",
+                example: "The buy-two-get-one-free offer on all baked items at this bakery will only last until October 31.",
+                ch: "在這間麵包店裡，所有烘焙產品買二送一的特價，將只持續到十月三十一日。"
+            },
+            {
+                word: "customer",
+                pos: "n.",
+                def: "顧客；客戶",
+                family: "",
+                example: "Mrs. Stewart is used to dealing with angry people because she handles all the customer complaints for a large store.",
+                ch: "Stewart太太習慣應付生氣的人，因為她為一間大商店處理所有的客訴。"
+            },
+            {
+                word: "advantage",
+                pos: "n.",
+                def: "優勢；有利條件",
+                family: "",
+                example: "It would be to the company’s advantage to promote their new product because the public is not familiar with it.",
+                ch: "宣傳他們的新產品會對這家公司有利，因為大眾對它還不熟悉。"
+            },
+            {
+                word: "eventually",
+                pos: "adv.",
+                def: "最後",
+                family: "eventual (adj.)",
+                example: "Raymond failed the GEPT the first time, but he tried again and eventually got an excellent score.",
+                ch: "Raymond第一次全民英檢沒考過，但他再次嘗試，最後得到很棒的成績。"
+            },
+            {
+                word: "trap",
+                pos: "n./v.",
+                def: "圈套；困住",
+                family: "",
+                example: "When the boy acted like he was crying, the mother fell into his trap and bought the cookies for him.",
+                ch: "當這個男孩裝哭時，他媽媽掉進他的圈套而買了餅乾給他。"
+            },
+            {
+                word: "aware",
+                pos: "adj.",
+                def: "知道；意識到",
+                family: "awareness (n.)",
+                example: "None of the students was aware that their teacher was actually a famous author.",
+                ch: "沒有一位學生知道他們的老師事實上是一位有名的作家。"
+            },
+            {
+                word: "clever",
+                pos: "adj.",
+                def: "聰明的",
+                family: "",
+                example: "The teacher was really impressed with the students’ clever ideas in their reports.",
+                ch: "老師對於學生們報告裡聰明的點子印象非常深刻。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "be likely to", def: "有可能會", example: "The home team is likely to beat the visiting team with the support of all their fans." },
+            { phrase: "within (...) reach", def: "在（……）伸手可及的範圍", example: "Parents should never leave scissors or other dangerous items within arm’s reach of their young children." },
+            { phrase: "line up", def: "排隊", example: "The announcement reminded passengers to line up before they boarded the plane." },
+            { phrase: "take advantage of", def: "利用", example: "Some people took advantage of Eva’s kindness by asking her too many favors." },
+            { phrase: "set up", def: "設立；設置", example: "When it started to rain, the campers set up their tent immediately." },
+            { phrase: "start off", def: "開始", example: "Mia and Noah started off their journey in France, then traveled across Europe, and eventually returned home safe and sound to England." }
+        ];
+
+        // Quiz questions – B2 style, focusing on consumer awareness and double comparatives
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which sentence best explains why convenience stores place products at eye level?",
+                options: [
+                    "They want the shelves to look full and colorful.",
+                    "They want the most profitable products to be highly visible so customers will notice and purchase them more easily.",
+                    "They want customers to line up in front of the shelves.",
+                    "They want customers to be familiar with all the brands in the store."
+                ],
+                correct: 1,
+                explanation: "The answer links visibility, profit, and purchases, which matches how displays and eye level are used as a sales strategy. [web:120][web:122]"
+            },
+            {
+                type: "mc",
+                q: "Choose the sentence that correctly uses the double comparative pattern.",
+                options: [
+                    "More the offers we see, more money we spend.",
+                    "The more we see special offers, more money we spend.",
+                    "The more special offers we see, the more money we are likely to spend.",
+                    "The special offers we see are more, the money we spend is more."
+                ],
+                correct: 2,
+                explanation: "The structure \"The more..., the more...\" is complete in both parts and shows a clear cause–effect relationship. [web:124]"
+            },
+            {
+                type: "error",
+                q: "Which part of the sentence should be changed? \"The more clever the trap is, the less awareness customers have about it.\"",
+                options: ["The more clever", "the trap is", "the less awareness customers have", "about it"],
+                correct: 2,
+                fix: "the less aware customers are",
+                explanation: "\"Aware\" is an adjective; in this pattern we need \"the less aware customers are\", not \"the less awareness customers have\"."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best shows how impulse buying works in a convenience store?",
+                options: [
+                    "Customers always plan every purchase before they enter the store.",
+                    "Customers usually avoid all offers near the cash register.",
+                    "When small goodies are displayed invitingly within arm’s reach of the cash register, customers often buy them on impulse.",
+                    "When products are not visible, customers feel an urge to purchase them."
+                ],
+                correct: 2,
+                explanation: "The answer combines display, position near the register, and impulse buying, reflecting common retail tactics. [web:120][web:122]"
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"Some stores use a clever ______ to start off with low prices and then raise them later.\"",
+                answer: "strategy",
+                hint: "s _ r _ t _ g _",
+                explanation: "\"Strategy\" is the noun that describes a planned way of reaching a goal, such as making more profit."
+            },
+            {
+                type: "mc",
+                q: "Which sentence most clearly contrasts advantage and trap?",
+                options: [
+                    "This store has many customers and many products.",
+                    "This store takes advantage of its customers by setting up offers that eventually become a trap for people who are not aware of them.",
+                    "This store is familiar and visible to local people.",
+                    "This store aims to be more profitable every year."
+                ],
+                correct: 1,
+                explanation: "The answer shows how \"take advantage of\" can be negative and explains how offers can function as traps."
+            },
+            {
+                type: "error",
+                q: "Which word form is wrong in this sentence? \"The shop assistant was awareness of the boy’s urge to buy candy on impulse.\"",
+                options: ["shop assistant", "was", "awareness", "urge"],
+                correct: 2,
+                fix: "aware",
+                explanation: "\"Aware\" is the adjective we use after \"be\"; \"awareness\" is a noun and cannot follow \"was\" here."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best fits the idea of \"The more..., the less...\" in this unit?",
+                options: [
+                    "The more you line up, the more you start off.",
+                    "The more time you spend comparing prices, the less likely you are to buy something on impulse.",
+                    "The more products are on the shelves, the less offers there are.",
+                    "The more customers a store has, the less profitable it becomes."
+                ],
+                correct: 1,
+                explanation: "The sentence shows that careful comparison can reduce impulse buying, which fits the topic of awareness and control. [web:120][web:124]"
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"If you are ______ of the tricks that shops use, you can take control instead of falling into their traps.\"",
+                answer: "aware",
+                hint: "a _ a _ e",
+                explanation: "\"Aware\" describes someone who knows about a situation and pays attention to it."
+            },
+            {
+                type: "mc",
+                q: "Which option completes the sentence in the most natural way? \"There’s no need to be embarrassed if you feel a sudden ______ to buy something you don’t really need.\"",
+                options: ["advantage", "display", "urge", "profit"],
+                correct: 2,
+                explanation: "\"Urge\" fits with \"sudden\" and describes a strong feeling that pushes you toward an action, like impulse buying."
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-rose-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-rose-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Well done!" : "💡 Take another look";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 4000);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Unit Master! 🏆", msg: "You can now explain convenience store tricks and shopping habits with clear, confident language.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You understand how impulse, offers, and awareness connect. Try using these patterns when you talk about your own shopping habits.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the Lexicon and Master Patterns tabs, then try the quiz again to strengthen your control of these words.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Focus on the key shopping verbs and the double comparative pattern; they will feel more natural with use.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>

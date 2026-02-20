@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up: Sniffing Out More Than Just Bones | B1U4 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #fff7ed 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #f97316; color: white; border-color: #fb923c; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-orange-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-dog fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+                    Level Up: Sniffing Out More Than Just Bones
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-orange-400"></i> B1 Reading & Vocabulary Dashboard – Unit 4
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-orange-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Patterns
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Ultimate Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-orange-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-orange-100 font-black text-9xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-orange-100 text-orange-600 font-black text-xs uppercase tracking-widest mb-4">adj.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-2">sensitive</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-4">敏感的</h3>
+                            
+                            <p id="vocab-family" class="text-sm text-slate-400 mb-6 italic"></p>
+
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-orange-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-orange-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-orange-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-orange-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 20</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-orange-500 shadow-xl flex items-center justify-center text-white hover:bg-orange-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <!-- Relative clauses -->
+                <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">…N + who(m)/which/that…</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-orange-300 flex items-center gap-2 mb-4"><i class="fas fa-lightbulb"></i> Pattern</h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                Use <span class="text-orange-300 font-bold">who / which / that</span> to give more information about a noun.
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• Some dogs are specially trained to become \"sniffer dogs,\" <span class="text-orange-300 font-bold">which</span> use their keen sense of smell.</li>
+                                <li>• Maria Tello, <span class="text-orange-300 font-bold">who</span> was a 58-year-old woman with diabetes, was asleep one night.</li>
+                                <li>• This is the dog <span class="text-orange-300 font-bold">that</span> detected the disease.</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Common Mistakes</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> This is a dog it can detect disease.</p>
+                                <p><span class="text-green-300 font-black">✓</span> This is a dog that can detect disease.</p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> Maria Tello, she was a woman with diabetes, was asleep.</p>
+                                <p><span class="text-green-300 font-black">✓</span> Maria Tello, who was a woman with diabetes, was asleep.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Here/There inversion -->
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-indigo-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-orange-500">
+                        <i class="fas fa-bolt"></i> Here/There + be + N 倒裝
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-orange-50 p-8 rounded-3xl border-2 border-orange-100">
+                            <h5 class="font-black text-orange-600 mb-4 text-xl underline">Here / There + be…</h5>
+                            <p class="text-sm mb-3">
+                                When a sentence begins with <span class="font-bold">Here</span> or <span class="font-bold">There</span> and the subject is a noun, we usually use inversion.
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• Here are a few more interesting ways that these amazing animals can help humans out.</li>
+                                <li>• There is a sniffer dog in the airport.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s Tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                If the subject is a pronoun, we do <span class="font-bold">not</span> invert: 
+                                \"Here they are.\" / \"There he is.\" 
+                                The verb agrees with the real subject after Here/There.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-orange-400 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "Dogs don’t just smell ‘good’ or ‘bad’—they detect specific odors. Use specific words and patterns when you describe their amazing abilities."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: B1 U4 Sniffing Out More Than Just Bones ---
+
+        const vocabulary = [
+            {
+                word: "sensitive",
+                pos: "adj.",
+                def: "敏感的",
+                family: "",
+                example: "Kelly is very sensitive to flavors. She can taste any food or drink and name it without seeing it.",
+                ch: "Kelly對味道很敏感，不用看就知道吃了或喝了什麼。"
+            },
+            {
+                word: "keen",
+                pos: "adj.",
+                def: "敏銳的；渴望的",
+                family: "",
+                example: "The owl has such a keen sense of hearing that it can hunt animals in the dark.",
+                ch: "貓頭鷹聽覺非常敏銳，所以可以在黑暗中獵食。"
+            },
+            {
+                word: "detect",
+                pos: "v.",
+                def: "偵測到；察覺",
+                family: "",
+                example: "For most people, it is not easy to detect a small change in temperature.",
+                ch: "多數人不易察覺溫度的細微變化。"
+            },
+            {
+                word: "item",
+                pos: "n.",
+                def: "一項物品",
+                family: "",
+                example: "More than half of the items in the clothing store were on sale for one day only.",
+                ch: "那間服飾店超過半數的品項有單日特價。"
+            },
+            {
+                word: "accomplish",
+                pos: "v.",
+                def: "達成",
+                family: "accomplishment (n.)",
+                example: "Albert respects those who have accomplished something great in their lives.",
+                ch: "Albert尊敬那些在他們生命中達成偉大事蹟的人。"
+            },
+            {
+                word: "disease",
+                pos: "n.",
+                def: "疾病",
+                family: "",
+                example: "Washing your hands often is a good way to stop the spread of disease.",
+                ch: "常洗手是預防疾病傳染的好方法。"
+            },
+            {
+                word: "infected",
+                pos: "adj.",
+                def: "遭感染的",
+                family: "infect (v.), infection (n.)",
+                example: "Several passengers were found to have the disease after they took the same flight as an infected person.",
+                ch: "數位旅客在與感染者搭同一班飛機後也被發現患病了。"
+            },
+            {
+                word: "locate",
+                pos: "v.",
+                def: "找到……（的位置）",
+                family: "location (n.)",
+                example: "These days, most taxi drivers use GPS to locate places they don’t know how to drive to.",
+                ch: "現在，多數的計程車司機都用GPS找到他們不知道路的地方。"
+            },
+            {
+                word: "reward",
+                pos: "n./v.",
+                def: "獎勵；報酬；獎賞",
+                family: "",
+                example: "Janice was given a reward of $2,000 for informing the police of the address of the man they were searching for.",
+                ch: "Janice告知警方他們追緝中的男子的地址，因此獲贈 2,000 元的賞金。"
+            },
+            {
+                word: "ability",
+                pos: "n.",
+                def: "能力",
+                family: "",
+                example: "Eagles have the ability to fly without landing for over three hours.",
+                ch: "老鷹有飛行超過三小時不需著地的能力。"
+            },
+            {
+                word: "predict",
+                pos: "v.",
+                def: "預測",
+                family: "",
+                example: "The weatherperson predicted that it would start raining around 6:00 p.m., and she was correct.",
+                ch: "氣象人員預報晚上六點左右會開始下雨，果然沒錯。"
+            },
+            {
+                word: "manage",
+                pos: "v.",
+                def: "設法成功做到；能夠應付；管理",
+                family: "management (n.)",
+                example: "Kyle managed to lose twenty pounds by exercising every day and eating less junk food.",
+                ch: "Kyle靠著每天運動並且少吃垃圾食物成功瘦下二十磅。"
+            },
+            {
+                word: "create",
+                pos: "v.",
+                def: "創造；產生出",
+                family: "creation (n.), creative (adj.), creativity (n.)",
+                example: "The inventor of the telephone, Antonio Meucci, created a new way for humans to communicate.",
+                ch: "電話的發明者Antonio Meucci創造了一種讓人類溝通的新方式。"
+            },
+            {
+                word: "expose",
+                pos: "v.",
+                def: "使接觸；使體驗；使暴露於",
+                family: "exposure (n.)",
+                example: "By reading these articles, students will be exposed to different opinions about the topic.",
+                ch: "藉由閱讀這些文章，學生們將會接觸到關於這個主題的不同意見。"
+            },
+            {
+                word: "perform",
+                pos: "v.",
+                def: "做某事；表演",
+                family: "performance (n.)",
+                example: "After Mrs. Checknita fell ill, her family hired someone to help her perform daily tasks.",
+                ch: "在Checknita太太生病後，她的家人雇人來幫助她執行日常事務。"
+            },
+            {
+                word: "behavior",
+                pos: "n.",
+                def: "行為",
+                family: "behave (v.)",
+                example: "Animal behavior can tell us a lot about what a creature is thinking about or wants.",
+                ch: "動物行為可以讓我們清楚知道動物在想什麼或想要什麼。"
+            },
+            {
+                word: "alert",
+                pos: "n./adj.",
+                def: "警示；警覺的",
+                family: "",
+                example: "Everybody was asked to leave the mall due to a bomb alert in one of the stores.",
+                ch: "所有人都被要求離開購物中心，因為其中一間店有炸彈警示。"
+            },
+            {
+                word: "complete",
+                pos: "adj./v.",
+                def: "已完成的；完成",
+                family: "",
+                example: "The race is not complete until every runner from every team crosses the finish line.",
+                ch: "比賽要等到各隊的每位跑者都跨過終點線才算結束。"
+            },
+            {
+                word: "assign",
+                pos: "v.",
+                def: "指派",
+                family: "assignment (n.)",
+                example: "Craig was assigned the task of giving the new students a tour of the school.",
+                ch: "Craig被指派一項帶著新學生校園導覽的任務。"
+            },
+            {
+                word: "specific",
+                pos: "adj.",
+                def: "特定的",
+                family: "",
+                example: "There wasn’t any specific reason why Jason didn’t attend the performance with his friends.",
+                ch: "Jason沒有和朋友一起參與演出並沒有什麼特別理由。他純粹是不想去罷了。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "due to", def: "因為", example: "The restaurant was not very popular due to the smell of the seafood market nearby." },
+            { phrase: "all of a sudden", def: "突然間", example: "Cindy was walking down the street when all of a sudden, rain began to pour down from the sky." },
+            { phrase: "turn out", def: "結果是", example: "All the members of the band were worried about their performance, but it turned out to be amazing!" },
+            { phrase: "come across", def: "遇到；偶然碰見", example: "Paulina went through all of her receipts but didn’t come across any winning numbers." },
+            { phrase: "carry out", def: "執行；進行", example: "After the statue went missing from the square, the police carried out an investigation." }
+        ];
+
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which word best fits? \"Sniffer dogs can ______ even very small amounts of certain chemicals.\"",
+                options: ["assign", "detect", "create", "perform"],
+                correct: 1,
+                explanation: "\"Detect\" means to notice or discover something, often with a special ability."
+            },
+            {
+                type: "mc",
+                q: "Which sentence correctly uses \"due to\"?",
+                options: [
+                    "The park was closed due to a bomb alert.",
+                    "Due to the park was closed, we go home.",
+                    "The park due to closed a bomb alert.",
+                    "We due to closed the park."
+                ],
+                correct: 0,
+                explanation: "\"Due to + N\" is used to show the reason: due to a bomb alert."
+            },
+            {
+                type: "error",
+                q: "Find the error: \"The dog was train to locate specific items in the luggage.\"",
+                options: ["was", "train", "locate", "in the luggage"],
+                correct: 1,
+                fix: "trained",
+                explanation: "After \"was\", use the past participle: was trained."
+            },
+            {
+                type: "mc",
+                q: "Which word is closest in meaning to \"goal completed\"?",
+                options: ["specific", "infected", "complete", "keen"],
+                correct: 2,
+                explanation: "\"Complete\" means finished or fully done."
+            },
+            {
+                type: "type",
+                q: "Vocabulary: \"These dogs have the ______ to smell changes in a person’s blood sugar.\"",
+                answer: "ability",
+                hint: "a _ _ _ _ _ y",
+                explanation: "\"Ability\" is the power or skill to do something."
+            },
+            {
+                type: "mc",
+                q: "Which sentence correctly uses a relative clause?",
+                options: [
+                    "Some dogs are trained which detect disease.",
+                    "Some dogs are trained that they detect disease.",
+                    "Some dogs are trained which they detect disease.",
+                    "Some dogs are trained to detect disease, which can save lives."
+                ],
+                correct: 3,
+                explanation: "The clause \"which can save lives\" gives extra information about the whole idea before it."
+            },
+            {
+                type: "error",
+                q: "Spot the mistake: \"Here is many different tasks that sniffer dogs can carry out.\"",
+                options: ["Here is", "many different tasks", "that sniffer dogs can carry out", "no mistake"],
+                correct: 0,
+                fix: "Here are",
+                explanation: "The verb should agree with the plural noun \"tasks\": Here are many different tasks..."
+            },
+            {
+                type: "mc",
+                q: "Which phrase means \"to do or complete a plan\"?",
+                options: ["turn out", "carry out", "come across", "all of a sudden"],
+                correct: 1,
+                explanation: "\"Carry out\" means to perform or complete a task or plan."
+            },
+            {
+                type: "type",
+                q: "Word family: \"The teacher gave us a reading ______ about dog behavior.\"",
+                answer: "assignment",
+                hint: "a _ _ _ _ _ _ _ _ t",
+                explanation: "\"Assignment\" is a piece of work that a teacher gives to students."
+            },
+            {
+                type: "mc",
+                q: "Which sentence correctly uses \"turn out\"?",
+                options: [
+                    "The dog turned out the disease in the tree.",
+                    "It turned out that the dog could detect the disease very early.",
+                    "They turned out a bomb alert in the mall.",
+                    "The disease turned out the dog."
+                ],
+                correct: 1,
+                explanation: "\"It turned out that...\" is used to talk about the result that we discover later."
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-orange-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-orange-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Great job!" : "💡 Let’s learn from this";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 3500);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Unit Master! 🏆", msg: "You understand how these amazing dogs work—and the English to describe them!", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You’re ready to use these words and patterns in speaking and writing.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the vocabulary cards and try the quiz again.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Spend more time with the Lexicon and Grammar tabs, then retake the challenge.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>

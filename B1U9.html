@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up: Fighting for or against Graffiti | B1U9 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #0ea5e9; color: white; border-color: #38bdf8; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-sky-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-spray-can fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-sky-500 via-indigo-600 to-slate-900 bg-clip-text text-transparent">
+                    Level Up: Fighting for or against Graffiti
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-sky-400"></i> B1 Reading & Vocabulary Dashboard – Unit 9
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-sky-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-sky-400 to-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Patterns
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Ultimate Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-sky-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-sky-100 font-black text-8xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-sky-100 text-sky-600 font-black text-xs uppercase tracking-widest mb-3">adj.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-1">detailed</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-2">詳細的；細緻的</h3>
+                            <p id="vocab-family" class="text-sm md:text-base text-slate-500 mb-6 italic"></p>
+                            
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-sky-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-sky-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-sky-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-sky-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 16</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-sky-500 shadow-xl flex items-center justify-center text-white hover:bg-sky-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR SECTION -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <!-- Focus: S + V..., V-ing/p.p. (participle clause) -->
+                <div class="bg-gradient-to-br from-indigo-900 to-sky-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">S + V..., V‑ing / p.p.</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-sky-300 flex items-center gap-2 mb-4">
+                                <i class="fas fa-lightbulb"></i> Adding extra information
+                            </h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                We can use a <span class="text-sky-300 font-bold">V‑ing</span> or <span class="text-sky-300 font-bold">p.p.</span> clause after a sentence to add extra information about the subject or action.  
+                                This is common in B2‑level descriptions and news writing. [web:134]
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• Their art starts as sketches and outlines, <span class="text-sky-300 font-bold">perfected</span> with vivid pictures and various details later.</li>
+                                <li>• The city of Los Angeles has a huge problem with graffiti, <span class="text-sky-300 font-bold">spending</span> millions of dollars every year cleaning it up.</li>
+                                <li>• Many people walk past graffiti every day, <span class="text-sky-300 font-bold">associating</span> it with crime or pollution. [web:127][web:130]</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Form & common mistakes</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> Their art starts as sketches and outlines, <span class="underline">is perfected</span> with vivid pictures later.</p>
+                                <p><span class="text-green-300 font-black">✓</span> Their art starts as sketches and outlines, <span class="underline">perfected</span> with vivid pictures later.</p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    In this pattern, we usually drop <span class="font-bold">be</span> and use the past participle alone (perfected, destroyed, polluted).
+                                </p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> The city has a problem with graffiti, <span class="underline">spend</span> millions of dollars every year.</p>
+                                <p><span class="text-green-300 font-black">✓</span> The city has a problem with graffiti, <span class="underline">spending</span> millions of dollars every year.</p>
+                                <p class="mt-1 text-indigo-100 text-xs">
+                                    Use <span class="font-bold">V‑ing</span> to show an action that happens at the same time as the main verb.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Talking about art, crime, and community impact -->
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-sky-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-sky-500">
+                        <i class="fas fa-city"></i> Art, crime, or visual pollution?
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-sky-50 p-8 rounded-3xl border-2 border-sky-100">
+                            <p class="text-sm mb-3">
+                                At this level, you are expected to talk about graffiti as a <span class="font-bold">social issue</span>, not just as “pretty” or “ugly”. [web:127][web:130][web:135]
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• Some people see graffiti as a form of visual art, expressing strong opinions about politics or community life.</li>
+                                <li>• Others focus on the mess and the violence that some images suggest, associating graffiti with criminal or destructive behavior.</li>
+                                <li>• Cities must balance permission and control, making an effort to support creativity without increasing visual pollution or fear.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                Try linking <span class="font-bold">opinion words</span> (in my opinion, I associate, I am horrified)  
+                                with <span class="font-bold">social words</span> (community, violence, criminal, pollution) to sound more precise when you discuss graffiti.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-sky-500 to-indigo-500 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "When you talk about graffiti, show both sides: the effort and creativity, but also the possible damage to the community."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: B1 U9 Fighting for or against Graffiti ---
+
+        const vocabulary = [
+            {
+                word: "detailed",
+                pos: "adj.",
+                def: "詳細的；細緻的",
+                family: "detail (n.)",
+                example: "The art college students were asked to write a detailed description of their favorite work of art.",
+                ch: "這些藝術學院的學生被要求對於他們最喜愛的藝術作品寫一份詳細的描述。"
+            },
+            {
+                word: "mess",
+                pos: "n.",
+                def: "凌亂；髒亂",
+                family: "messy (adj.)",
+                example: "A week after the typhoon left the country, many areas were in a mess.",
+                ch: "在這個颱風遠離這個國家一週後，許多地區一片凌亂。"
+            },
+            {
+                word: "express",
+                pos: "v.",
+                def: "表達",
+                family: "expression (n.)",
+                example: "Lady Gaga uses music to express her view that people are different but equal.",
+                ch: "Lady Gaga用音樂來表達她認為人們生而不同但同為平等的觀點。"
+            },
+            {
+                word: "opinion",
+                pos: "n.",
+                def: "想法；意見",
+                family: "",
+                example: "In Cassandra’s opinion, borrowing books from the library is smarter than buying them because we usually only read them once.",
+                ch: "依Cassandra之見，從圖書館借書比去買書還要聰明，因為我們通常只會看一遍。"
+            },
+            {
+                word: "contrast",
+                pos: "v./n.",
+                def: "對比；對照",
+                family: "",
+                example: "The video contrasted a picture of a heavy smoker’s lungs with that of a non-smoker’s to discourage people from smoking.",
+                ch: "這支影片將老煙槍的肺的圖片和不抽煙的人的圖片做了一個對比，以勸阻人們不要吸煙。"
+            },
+            {
+                word: "horror",
+                pos: "n.",
+                def: "可怕；恐怖；恐懼",
+                family: "horrible (adj.), horrify (v.)",
+                example: "It’s difficult for most of us to imagine the horror of war because we haven’t experienced it ourselves.",
+                ch: "對於大部分的我們而言，要想像戰爭的可怕其實是困難的，因為我們從來沒有自己經歷過。"
+            },
+            {
+                word: "innocence",
+                pos: "n.",
+                def: "無辜；純真",
+                family: "innocent (adj.)",
+                example: "The salesman was good at getting customers to buy his products because he had a look of innocence.",
+                ch: "這個業務員很擅長讓顧客們購買他的產品，因為他有一個純真的外表。"
+            },
+            {
+                word: "violence",
+                pos: "n.",
+                def: "暴力",
+                family: "violent (adj.)",
+                example: "Most people would agree that the use of violence against children is not right in any situation.",
+                ch: "多數人同意不管在任何情況下用暴力來對孩子就是不對的。"
+            },
+            {
+                word: "visual",
+                pos: "adj.",
+                def: "視覺的",
+                family: "",
+                example: "Debra loves all kinds of visual arts, including pottery, paintings, drawings, and films.",
+                ch: "Debra喜歡各式各樣的視覺藝術，包括陶藝、油畫、圖畫和電影。"
+            },
+            {
+                word: "pollution",
+                pos: "n.",
+                def: "汙染",
+                family: "pollute (v.)",
+                example: "This machine can check the level of air pollution in your apartment and help reduce it.",
+                ch: "這個機器可以檢查出在你的公寓裡空氣汙染的程度，並且幫助降低它。"
+            },
+            {
+                word: "permission",
+                pos: "n.",
+                def: "許可；准許",
+                family: "permit (v.)",
+                example: "Excuse me, sir. You need to get special permission for the video camera in the museum.",
+                ch: "對不起，先生。在這個博物館裡你需要特別的許可才能使用攝影機。"
+            },
+            {
+                word: "effort",
+                pos: "n.",
+                def: "努力",
+                family: "",
+                example: "Cassandra put a lot of effort into her science project and her teacher praised it in the end.",
+                ch: "Cassandra很努力的做她的科學作業，且最後老師稱讚它。"
+            },
+            {
+                word: "community",
+                pos: "n.",
+                def: "社區",
+                family: "",
+                example: "Leaders of various local communities are meeting today to express their ideas about how to clean up their streets.",
+                ch: "許多當地社區的領導者今天將聚在一起，來表達關於如何把他們的街道清理乾淨的想法。"
+            },
+            {
+                word: "associate",
+                pos: "v.",
+                def: "聯想",
+                family: "association (n.)",
+                example: "Most people in Taiwan associate Beethoven’s “For Elise” with the coming of the garbage truck.",
+                ch: "在臺灣大部分的人都會把貝多芬的〈給愛麗絲〉和垃圾車的到來聯想在一起。"
+            },
+            {
+                word: "criminal",
+                pos: "adj./n.",
+                def: "犯罪的；罪犯",
+                family: "crime (n.)",
+                example: "Studies show that better education can lead to a drop in criminal behavior.",
+                ch: "研究顯示，較好的教育可以導致犯罪行為的降低。"
+            },
+            {
+                word: "destructive",
+                pos: "adj.",
+                def: "破壞性的；毀滅性的",
+                family: "destroy (v.), destruction (n.)",
+                example: "It is hard for most people to imagine the destructive power of modern bombs.",
+                ch: "對大部分人來說，很難想像現代的炸彈所具有的毁滅性力量。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "come in", def: "具有（形狀、尺寸等）", example: "The T-shirt you are trying on right now also comes in white, black, and navy blue." },
+            { phrase: "stand for", def: "代表", example: "In the term WHO, W stands for “World,” H stands for “Health,” and O stands for “Organization.”" },
+            { phrase: "nothing but", def: "只不過是；僅僅", example: "Mr. Rogers wants to have nothing but happiness and a lot of quality time with his family." },
+            { phrase: "get rid of", def: "去除；擺脫", example: "Betsy asked her husband to get rid of all the disgusting rotten food in the refrigerator." },
+            { phrase: "when it comes to", def: "當談到……時", example: "When it comes to decorating the Christmas tree, many families like to put the star or angel on top at the end." }
+        ];
+
+        // Quiz questions – B2 style, focusing on art vs crime, participle clauses, social impact
+        const quizQuestions = [
+            {
+                type: "mc",
+                q: "Which sentence best reflects the central question of this unit?",
+                options: [
+                    "Graffiti is colorful and appears in many cities.",
+                    "Graffiti is obviously art, taking a lot of time and hard work, but some people still see it as nothing but visual pollution and criminal damage.",
+                    "Graffiti is a kind of pollution which is always destructive and violent.",
+                    "Graffiti comes in many different colors and shapes."
+                ],
+                correct: 1,
+                explanation: "The answer shows both sides: effort and art, but also visual pollution and crime, which matches the “for or against” focus. [web:127][web:130]"
+            },
+            {
+                type: "mc",
+                q: "Choose the sentence that correctly uses a participle clause after the main clause.",
+                options: [
+                    "The city has a problem with graffiti, spends millions of dollars cleaning it up every year.",
+                    "The city has a problem with graffiti, spending millions of dollars cleaning it up every year.",
+                    "The city has a problem with graffiti, is spending millions of dollars cleaning it up every year.",
+                    "The city has a problem with graffiti, to spend millions of dollars cleaning it up every year."
+                ],
+                correct: 1,
+                explanation: "The V‑ing form \"spending\" adds extra information about the city’s action at the same time as the main verb. [web:134]"
+            },
+            {
+                type: "error",
+                q: "Which part of the sentence needs to be changed? \"Their art starts as sketches and outlines, is perfected with vivid pictures and various details later.\"",
+                options: ["starts as", "sketches and outlines", "is perfected", "vivid pictures and various details"],
+                correct: 2,
+                fix: "perfected",
+                explanation: "In this pattern we drop \"is\" and use the past participle alone: \"..., perfected with vivid pictures...\"."
+            },
+            {
+                type: "mc",
+                q: "Which sentence most clearly contrasts different opinions about graffiti?",
+                options: [
+                    "Some love it, others hate it, still others walk past without really thinking about it.",
+                    "Some see it, others don’t see it, still others see it at night.",
+                    "Some paint graffiti, others clean it, still others talk about it.",
+                    "Some draw sketches, others spray-paint, still others scribble."
+                ],
+                correct: 0,
+                explanation: "The sentence uses \"some... others... still others...\" to show three different attitudes, which fits the unit’s key structure."
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"In my ______, covering every wall with graffiti can destroy the innocence and beauty of an old community.\"",
+                answer: "opinion",
+                hint: "o _ _ n _ o _",
+                explanation: "\"Opinion\" is the noun used to introduce a personal view on a topic like graffiti."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best uses vocabulary from the unit to show a negative view of graffiti?",
+                options: [
+                    "Graffiti is a kind of visual art that many people enjoy taking photos of.",
+                    "Graffiti can turn a clean street into a mess, giving people a feeling of horror and associating the area with crime and violence.",
+                    "Graffiti comes in many colors and shapes and often covers big walls in the city.",
+                    "Graffiti sometimes shows detailed pictures that attract tourists."
+                ],
+                correct: 1,
+                explanation: "The answer links mess, horror, crime, and violence, which reflects typical arguments against graffiti. [web:132][web:135]"
+            },
+            {
+                type: "error",
+                q: "Which word form is wrong in this sentence? \"The government is trying to get rid from destructive graffiti in the city center.\"",
+                options: ["government", "is trying", "get rid from", "destructive graffiti"],
+                correct: 2,
+                fix: "get rid of",
+                explanation: "The correct phrase is \"get rid of\", not \"get rid from\"."
+            },
+            {
+                type: "mc",
+                q: "Which sentence best fits the pattern \"S + V..., V‑ing/p.p.\" and describes graffiti as art?",
+                options: [
+                    "Banksy is a famous street artist, his works stand for peace and innocence.",
+                    "Banksy is a famous street artist, has painted many walls in different countries.",
+                    "Banksy is a famous street artist, his work sometimes is considered criminal.",
+                    "Banksy is a famous street artist, using powerful visual images to express his opinions about war and community life."
+                ],
+                correct: 3,
+                explanation: "The V‑ing clause \"using powerful visual images...\" gives extra information about how he creates his art. [web:127][web:133]"
+            },
+            {
+                type: "type",
+                q: "Complete the sentence: \"Some people see graffiti as nothing but ______ behavior that should be punished.\"",
+                answer: "criminal",
+                hint: "c _ _ m _ n _ l",
+                explanation: "\"Criminal\" describes behaviour that breaks the law, which matches this strongly negative opinion."
+            },
+            {
+                type: "mc",
+                q: "Which option completes the sentence in the most natural way? \"When it comes to graffiti, many local leaders focus on the ______ it may cause to buildings and to the community’s image.\"",
+                options: ["innocence", "effort", "destruction", "permission"],
+                correct: 2,
+                explanation: "\"Destruction\" fits with the idea of damage to buildings and the community’s image."
+            }
+        ];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-sky-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-sky-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Well done!" : "💡 Take another look";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 4000);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Unit Master! 🏆", msg: "You can now discuss graffiti as a serious social issue, not just wall decoration.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "You clearly understand both the artistic and destructive sides of graffiti. Use these patterns in discussions and writing tasks.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review key words like pollution, community, criminal, and then try the quiz again to sharpen your arguments.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Focus on participle clauses and opinion language; they will help you sound more natural in debates about art and social issues.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>
