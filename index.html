@@ -2,15 +2,155 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>Book 1 Review</title>
+  <title>Book 1 線上教材目錄</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #fdfbfb, #f3f8ff);
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      background: #ffffffaa;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      color: #4158a6;
+    }
+    p.subtitle {
+      margin: 0;
+      font-size: 1rem;
+      color: #666;
+    }
+    main {
+      max-width: 900px;
+      margin: 30px auto 50px;
+      padding: 0 20px;
+    }
+    .section-title {
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      color: #3c7c6b;
+      border-left: 6px solid #f4b400;
+      padding-left: 10px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: 1px solid #eef0f7;
+    }
+    .card a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .card span.note {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+      border-color: #cdd9ff;
+    }
+    footer {
+      text-align: center;
+      padding: 15px 10px 25px;
+      font-size: 0.8rem;
+      color: #888;
+    }
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Book 1 Review 目錄</h1>
-  <ul>
-    <li><a href="B1R1.html">B1R1：Review 1</a></li>
-    <!-- 之後有其他檔案就照這行格式往下加 -->
-    <!-- <li><a href="B1R2.html">B1R2：第二篇書評</a></li> -->
-  </ul>
+  <header>
+    <h1>Book 1 線上教材目錄</h1>
+    <p class="subtitle">Lessons &amp; Reviews｜清楚導航，快速找到對應單元</p>
+  </header>
+
+  <main>
+    <!-- Lessons -->
+    <h2 class="section-title">Lessons</h2>
+    <div class="cards">
+      <div class="card">
+        <a href="B1U1.html">Lesson 1</a>
+        <span class="note">對應：B1U1.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U2.html">Lesson 2</a>
+        <span class="note">對應：B1U2.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U3.html">Lesson 3</a>
+        <span class="note">對應：B1U3.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U4.html">Lesson 4</a>
+        <span class="note">對應：B1U4.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U5.html">Lesson 5</a>
+        <span class="note">對應：B1U5.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U6.html">Lesson 6</a>
+        <span class="note">對應：B1U6.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U7.html">Lesson 7</a>
+        <span class="note">對應：B1U7.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U8.html">Lesson 8</a>
+        <span class="note">對應：B1U8.html</span>
+      </div>
+      <div class="card">
+        <a href="B1U9.html">Lesson 9</a>
+        <span class="note">對應：B1U9.html</span>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <h2 class="section-title">Reviews</h2>
+    <div class="cards">
+      <div class="card">
+        <a href="B1R1.html">Review 1</a>
+        <span class="note">對應：B1R1.html</span>
+      </div>
+      <div class="card">
+        <a href="B1R2.html">Review 2</a>
+        <span class="note">對應：B1R2.html</span>
+      </div>
+      <div class="card">
+        <a href="B1R3.html">Review 3</a>
+        <span class="note">對應：B1R3.html</span>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Book 1 線上教材 · 目錄頁（index.html）
+  </footer>
 </body>
 </html>
-
