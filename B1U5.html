@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up: The Life of a Plastic Bag | B1U5 Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #fff7ed 100%);
+            min-height: 100vh;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-active-vocab { background-color: #f97316; color: white; border-color: #fb923c; }
+        .tab-active-grammar { background-color: #4f46e5; color: white; border-color: #818cf8; }
+        .tab-active-quiz { background-color: #ec4899; color: white; border-color: #f472b6; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; color: #15803d !important; }
+        .option-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="fade-in">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-orange-500 p-2 rounded-xl shadow-lg rotate-3 text-white">
+                    <i class="fas fa-shopping-bag fa-2x"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+                    Level Up: The Life of a Plastic Bag
+                </h1>
+            </div>
+            <p class="text-slate-500 font-medium flex items-center gap-2">
+                <i class="fas fa-bullseye text-orange-400"></i> B1 Reading & Vocabulary Dashboard – Unit 5
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white p-4 rounded-[2rem] shadow-xl border-2 border-orange-100">
+            <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white">
+                    <i class="fas fa-user-tie fa-2xl"></i>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <div>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Coach Janelle</p>
+                <p class="font-black text-indigo-900 text-lg">Online Now ✨</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto mb-10 flex flex-wrap justify-center gap-4">
+        <button onclick="switchTab('vocab')" id="btn-vocab" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100 tab-active-vocab">
+            <i class="fas fa-brain"></i> B1 Lexicon
+        </button>
+        <button onclick="switchTab('grammar')" id="btn-grammar" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-pen-nib"></i> Master Patterns
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100">
+            <i class="fas fa-trophy"></i> Ultimate Challenge
+        </button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- VOCABULARY SECTION -->
+        <section id="section-vocab" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 flex flex-col items-center">
+                    <div id="vocab-card" class="w-full bg-white rounded-[3rem] shadow-2xl border-b-[12px] border-orange-400 p-10 md:p-16 text-center relative overflow-hidden transition-all duration-500">
+                        <div id="vocab-number" class="absolute top-8 right-12 text-orange-100 font-black text-8xl select-none opacity-40">1</div>
+                        <div class="relative z-10">
+                            <div id="vocab-pos" class="inline-block px-4 py-1 rounded-full bg-orange-100 text-orange-600 font-black text-xs uppercase tracking-widest mb-3">adj.</div>
+                            <h2 id="vocab-word" class="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter mb-1">plastic</h2>
+                            <h3 id="vocab-def" class="text-xl font-bold text-slate-500 mb-2">塑膠（製）的 / 塑膠</h3>
+                            <p id="vocab-family" class="text-sm md:text-base text-slate-500 mb-6 italic"></p>
+                            
+                            <div id="vocab-example-container" class="hidden animate-in fade-in duration-500 max-w-2xl mx-auto text-left">
+                                <div class="p-6 bg-white rounded-3xl border-2 border-orange-200 shadow-inner">
+                                    <p id="vocab-example" class="text-lg text-slate-700 font-medium mb-4 italic"></p>
+                                    <p id="vocab-ch" class="text-slate-400 font-medium"></p>
+                                </div>
+                            </div>
+                            <button id="btn-reveal" onclick="revealExample()" class="mt-4 bg-orange-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-orange-600 transition-all shadow-lg">REVEAL CONTEXT</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 mt-10">
+                        <button onclick="prevVocab()" class="w-16 h-16 rounded-3xl bg-white shadow-xl flex items-center justify-center text-slate-400 hover:text-orange-500 transition-all border border-slate-50"><i class="fas fa-chevron-left fa-2x"></i></button>
+                        <div id="vocab-counter" class="bg-white px-8 py-4 rounded-3xl font-black text-2xl text-slate-700 shadow-lg">1 / 16</div>
+                        <button onclick="nextVocab()" class="w-16 h-16 rounded-3xl bg-orange-500 shadow-xl flex items-center justify-center text-white hover:bg-orange-600 transition-all"><i class="fas fa-chevron-right fa-2x"></i></button>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-white p-6 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i> Phrases</h3>
+                    <div id="idioms-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Idioms injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAMMAR SECTION (same B2 explanation as before) -->
+        <section id="section-grammar" class="content-section hidden">
+            <div class="space-y-10 fade-in">
+                <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-[4rem] p-10 md:p-16 text-white shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black mb-6">make / have / let + O + VR</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white/10 p-8 rounded-[2rem] border border-white/20">
+                            <h4 class="font-black text-orange-300 flex items-center gap-2 mb-4">
+                                <i class="fas fa-lightbulb"></i> Pattern & meaning
+                            </h4>
+                            <p class="mb-4 text-sm md:text-base">
+                                We use <span class="text-orange-300 font-bold">make / have / let + object + base verb</span>
+                                to show that one person or thing causes another person or thing to do something.
+                                This structure is very common when we describe <span class="text-orange-300 font-bold">influence, control, or permission</span>.
+                            </p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• When it was getting dark, they packed everything up and <span class="text-orange-300 font-bold">let me stay</span> there alone.</li>
+                                <li>• When we eat seafood, the poisonous substances from the plastic end up inside us and <span class="text-orange-300 font-bold">make us feel</span> sick.</li>
+                                <li>• They produce us to make their lives better, but then they misuse us and <span class="text-orange-300 font-bold">make everyone’s life</span> worse.</li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-black text-2xl">Common problems</h4>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> The movie made me to think about plastic waste.</p>
+                                <p><span class="text-green-300 font-black">✓</span> The movie <span class="underline">made me think</span> about plastic waste.</p>
+                            </div>
+                            <div class="p-5 bg-indigo-700/50 rounded-2xl border border-indigo-500/30 text-sm">
+                                <p><span class="text-red-300 font-black">✗</span> My parents let me to go to the beach on my own.</p>
+                                <p><span class="text-green-300 font-black">✓</span> My parents <span class="underline">let me go</span> to the beach on my own.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 shadow-2xl border-2 border-indigo-50">
+                    <h3 class="text-3xl font-black text-slate-800 mb-8 flex items-center gap-4 text-orange-500">
+                        <i class="fas fa-bolt"></i> Talking about plastic and the environment
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-orange-50 p-8 rounded-3xl border-2 border-orange-100">
+                            <h5 class="font-black text-orange-600 mb-4 text-xl underline">over time / end up</h5>
+                            <p class="text-sm mb-3">
+                                In this unit, we often describe gradual change and final results in the environment.
+                                At B2 level, combine <span class="font-bold">over time</span> and <span class="font-bold">end up</span> with more precise vocabulary.
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-700">
+                                <li>• Because of all the littering, a lot of plastic products <span class="font-bold">end up</span> in the ocean.</li>
+                                <li>• Over time, these plastic bags <span class="font-bold">break down</span> into smaller pieces that can harm sea animals.</li>
+                                <li>• When we eat seafood, poisonous substances from plastic can <span class="font-bold">end up inside us</span> and make us feel sick.</li>
+                            </ul>
+                        </div>
+                        <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100">
+                            <p class="font-black text-indigo-900 mb-2 italic">Coach Janelle’s B2 tip:</p>
+                            <p class="text-indigo-800 text-sm leading-relaxed">
+                                When you talk about the environment, try to move beyond simple facts.
+                                Link actions and results: for example, <span class="font-bold">“If plastic bags are not recycled properly, they may end up drifting in ocean currents and harming sea animals.”</span>
+                                This kind of cause–effect sentence is typical of B2 writing and speaking.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="section-quiz" class="content-section hidden">
+            <div id="quiz-container" class="max-w-4xl mx-auto py-10">
+                <!-- Quiz dynamically injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-20 p-10 bg-white rounded-[4rem] shadow-xl flex flex-col md:flex-row gap-8 items-center border border-slate-50">
+        <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-orange-400 rounded-full flex-shrink-0 flex items-center justify-center text-white text-4xl shadow-xl">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h4 class="text-2xl font-black text-indigo-900 mb-2">Coach Janelle's Tip</h4>
+            <p id="footer-tip" class="text-indigo-800 italic">
+                "At B2 level, don’t just remember isolated words. Track the word family and the environmental story behind each term."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA: B1 U5 The Life of a Plastic Bag ---
+
+        const vocabulary = [
+            {
+                word: "plastic",
+                pos: "adj./n.",
+                def: "塑膠（製）的；塑膠",
+                family: "",
+                example: "You should never put hot drinking water into plastic bottles or cups.",
+                ch: "你絕對不可以將熱開水放到塑膠瓶或塑膠杯裡。"
+            },
+            {
+                word: "convenience",
+                pos: "n.",
+                def: "便利",
+                family: "",
+                example: "Many shops post their business hours on their Facebook pages for the convenience of the public.",
+                ch: "為了大眾方便，許多商店會將它們的營業時間張貼在它們的臉書頁面上。"
+            },
+            {
+                word: "eagerly",
+                pos: "adv.",
+                def: "渴望地",
+                family: "eager (adj.)",
+                example: "Rick is eagerly waiting for his boss to post the summer work schedule because he wants to plan his vacation.",
+                ch: "Rick渴望地等待他的老闆張貼夏季的工作時間表，因為他想要計畫他的假期。"
+            },
+            {
+                word: "surround",
+                pos: "v.",
+                def: "圍繞",
+                family: "surroundings (n. pl.)",
+                example: "The house is surrounded by tall trees, so nobody can see it from the road.",
+                ch: "那棟房子被高聳的樹所圍繞，所以沒有人能從馬路上看到它。"
+            },
+            {
+                word: "drift",
+                pos: "v.",
+                def: "漂流",
+                family: "",
+                example: "After the captain fell asleep, the ship passed the harbor and then drifted toward the middle of the sea.",
+                ch: "在船長睡著之後，這艘船越過港口接著漂向海中央。"
+            },
+            {
+                word: "envy",
+                pos: "v./n.",
+                def: "羨慕",
+                family: "",
+                example: "Christopher really envies his best friend, Patty, because she has been to so many countries.",
+                ch: "Christopher真的很羨慕他最好的朋友Patty，因為她已經去過非常多國家。"
+            },
+            {
+                word: "crowded",
+                pos: "adj.",
+                def: "擠滿的；擁擠的",
+                family: "crowd (n.)",
+                example: "The Smith family is moving into a new house tomorrow, so their living room is crowded with boxes.",
+                ch: "Smith一家人將在明天搬入新家，所以他們的客廳擠滿了箱子。"
+            },
+            {
+                word: "obviously",
+                pos: "adv.",
+                def: "顯然",
+                family: "obvious (adj.)",
+                example: "The little girl is wearing yellow shoes, a yellow dress, and has painted her nails yellow. Obviously, she likes this color.",
+                ch: "這個小女孩正穿著黃色的鞋子跟黃色的洋裝，而且還把她的指甲塗成黃色。顯然她喜歡這個顏色。"
+            },
+            {
+                word: "product",
+                pos: "n.",
+                def: "產品",
+                family: "produce (v.), production (n.)",
+                example: "This shop sells a variety of health and food products for babies.",
+                ch: "這家商店販售各式各樣的嬰兒專用的健康產品和食品。"
+            },
+            {
+                word: "consume",
+                pos: "v.",
+                def: "吃喝；消耗",
+                family: "consumer (n.)",
+                example: "Driving after you consume too much beer or wine can lead to a car crash.",
+                ch: "飲用太多啤酒或葡萄酒後開車可能會造成車禍。"
+            },
+            {
+                word: "poisonous",
+                pos: "adj.",
+                def: "有毒的",
+                family: "poison (v./n.)",
+                example: "Chocolate is delicious for most people, but did you know that it can be poisonous to dogs?",
+                ch: "巧克力對大部分的人來說很美味，但是你知道對狗來說它可能是有毒的嗎？"
+            },
+            {
+                word: "substance",
+                pos: "n.",
+                def: "物質",
+                family: "",
+                example: "The police found a chemical substance at the murder scene and are doing tests on it right now.",
+                ch: "警方在謀殺現場發現一種化學物質，現在正在對它進行檢驗。"
+            },
+            {
+                word: "recycling",
+                pos: "n.",
+                def: "回收",
+                family: "recycle (v.)",
+                example: "After the party, Nick took all the empty bottles out for recycling.",
+                ch: "派對過後，Nick把所有空瓶子拿到外面回收。"
+            },
+            {
+                word: "harm",
+                pos: "n./v.",
+                def: "傷害",
+                family: "harmful (adj.)",
+                example: "The cleaners were careful not to do any harm to the objects in the museum as they cleaned around them.",
+                ch: "在清潔的時候，那些清潔工很小心避免損傷博物館裡的物品。"
+            },
+            {
+                word: "environment",
+                pos: "n.",
+                def: "自然環境；環境",
+                family: "environmental (adj.)",
+                example: "It is every person’s responsibility to save the earth’s natural environment for our sons and daughters.",
+                ch: "為我們未來的子女拯救地球的自然環境是每一個人的責任。"
+            },
+            {
+                word: "properly",
+                pos: "adv.",
+                def: "適當地",
+                family: "proper (adj.)",
+                example: "Marc didn’t complete the assignment properly, so the teacher asked him to do it again.",
+                ch: "Marc沒有好好地完成作業，所以老師要求他重做。"
+            }
+        ];
+
+        const idioms = [
+            { phrase: "come along", def: "到達；出現", example: "Jane said she’s not ready to join us yet, but she will come along later." },
+            { phrase: "pack ... up", def: "收拾；打包", example: "After Mr. Huang got fired, he sadly packed all of his things up and left." },
+            { phrase: "on one’s own", def: "獨自；靠自己", example: "Lily loves to go fishing on her own, so she can listen to the sound of the sea." },
+            { phrase: "for a while", def: "一陣子", example: "The lion hid behind a tree for a while, waiting for a deer to walk by." },
+            { phrase: "end up", def: "最後結果是", example: "The family couldn’t agree on a restaurant to go to, so they ended up staying home and eating pizza." }
+        ];
+
+        // B2-style quiz: longer stems, more abstract links, explicit reasons
+       const quizQuestions = [
+    {
+        type: "mc",
+        q: "Which sentence best explains a possible consequence of using plastic bags carelessly?",
+        options: [
+            "Plastic bags are bad for fish because they are everywhere in the sea.",
+            "If plastic bags are not recycled properly, they can drift in ocean currents and eventually be eaten by sea animals.",
+            "Plastic bags are in the sea and the animals don’t like them.",
+            "The sea is crowded with plastic bags and that is not good."
+        ],
+        correct: 1,
+        explanation: "The answer gives a clear cause–effect chain (poor recycling → drifting → being eaten), using precise verbs and adverbs."
+    },
+    {
+        type: "mc",
+        q: "Choose the sentence that most effectively describes the impact of a documentary about plastic.",
+        options: [
+            "The documentary made me to think more carefully about plastic.",
+            "The documentary made me think more carefully about how my plastic use affects the environment.",
+            "The documentary made that I think more carefully about plastic.",
+            "The documentary made thinking more carefully about plastic bags."
+        ],
+        correct: 1,
+        explanation: "\"Made me think\" is the correct causative form, and the sentence links personal behaviour to environmental impact."
+    },
+    {
+        type: "error",
+        q: "Which part of the sentence should be changed? \"They let me to stay on the beach on my own, even though it was getting dark.\"",
+        options: ["let me", "to stay", "on my own", "even though"],
+        correct: 1,
+        fix: "stay",
+        explanation: "After \"let\", we use the base form: let + object + V → \"let me stay\"."
+    },
+    {
+        type: "mc",
+        q: "Which sentence uses \"end up\" in a clear and natural way?",
+        options: [
+            "Plastic bags end up convenient for consumers.",
+            "If people keep throwing plastic bags away, a lot of them will end up in landfills instead of being recycled.",
+            "Plastic bags end up are in the ocean.",
+            "Plastic bags end up to be harmful."
+        ],
+        correct: 1,
+        explanation: "The answer combines a continuing action with a final result, which is how \"end up\" is typically used."
+    },
+    {
+        type: "type",
+        q: "Complete the sentence: \"Many ______ are starting to choose products that create less plastic waste.\"",
+        answer: "consumers",
+        hint: "c _ _ _ _ _ _ s",
+        explanation: "The context describes people who buy products, so the plural noun \"consumers\" fits best."
+    },
+    {
+        type: "mc",
+        q: "Fill in the blank: \"The city built new facilities so that plastic could be collected and processed in a more ______ way.\"",
+        options: ["obviously", "poisonous", "crowded", "environmental"],
+        correct: 3,
+        explanation: "\"Environmental\" describes actions or policies that protect the natural world, matching the idea of processing plastic more responsibly."
+    },
+    {
+        type: "error",
+        q: "Which word form is incorrect in this sentence? \"Although plastic products are extremely convenience for shoppers, they can cause serious harm to the environment over time.\"",
+        options: ["plastic products", "extremely", "convenience", "over time"],
+        correct: 2,
+        fix: "convenient",
+        explanation: "\"Extremely\" is followed by an adjective, so it should be \"extremely convenient\"."
+    },
+    {
+        type: "mc",
+        q: "Which sentence would be the most suitable in an oral presentation about plastic pollution?",
+        options: [
+            "Obviously, plastic bags are bad, and we should stop using them.",
+            "Obviously, plastic bags are so convenient that nobody wants to change their habits.",
+            "Obviously, if we continue to rely on plastic for convenience, we will cause more damage to the environment than we expect.",
+            "Obviously, plastic bags are bad things in the environment and in the globe."
+        ],
+        correct: 2,
+        explanation: "The answer contrasts convenience with long‑term damage and uses a complex clause, which works well in a formal presentation."
+    },
+    {
+        type: "type",
+        q: "Complete the sentence: \"The company claims that its new products are less ______ to sea life because they decompose more quickly.\"",
+        answer: "harmful",
+        hint: "h _ _ _ _ _ l",
+        explanation: "\"Harmful\" is the adjective used with \"to sea life\" to describe negative effects."
+    },
+    {
+        type: "mc",
+        q: "Which option best completes the sentence? \"By showing images of polluted beaches, the campaign ______ many people reconsider their everyday use of plastic bags.\"",
+        options: ["let", "made", "had", "envied"],
+        correct: 1,
+        explanation: "\"Made\" plus object plus base verb (\"made many people reconsider\") shows that the campaign caused a change in behaviour."
+    }
+];
+
+        // --- STATE ---
+        let currentVocabIdx = 0;
+        let currentQuizIdx = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        // --- VOCABULARY LOGIC ---
+        function updateVocabUI() {
+            const item = vocabulary[currentVocabIdx];
+            document.getElementById('vocab-number').innerText = currentVocabIdx + 1;
+            document.getElementById('vocab-pos').innerText = item.pos;
+            document.getElementById('vocab-word').innerText = item.word;
+            document.getElementById('vocab-def').innerText = item.def;
+            document.getElementById('vocab-example').innerText = `"${item.example}"`;
+            document.getElementById('vocab-ch').innerText = item.ch;
+            document.getElementById('vocab-counter').innerText = `${currentVocabIdx + 1} / ${vocabulary.length}`;
+            document.getElementById('vocab-family').innerText = item.family ? `Word family: ${item.family}` : "";
+            
+            document.getElementById('vocab-example-container').classList.add('hidden');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            document.getElementById('vocab-card').classList.remove('bg-orange-50');
+        }
+
+        function nextVocab() {
+            currentVocabIdx = (currentVocabIdx + 1) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function prevVocab() {
+            currentVocabIdx = (currentVocabIdx - 1 + vocabulary.length) % vocabulary.length;
+            updateVocabUI();
+        }
+
+        function revealExample() {
+            document.getElementById('vocab-example-container').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('vocab-card').classList.add('bg-orange-50');
+        }
+
+        function loadIdioms() {
+            const list = document.getElementById('idioms-list');
+            list.innerHTML = idioms.map(item => `
+                <div class="p-4 bg-slate-50 rounded-2xl hover:bg-indigo-50 transition-all">
+                    <p class="font-black text-indigo-600">${item.phrase}</p>
+                    <p class="text-xs text-slate-400 mb-1">${item.def}</p>
+                    <p class="text-xs text-slate-500 italic">"${item.example}"</p>
+                </div>
+            `).join('');
+        }
+
+        // --- TAB LOGIC ---
+        function switchTab(tab) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn flex items-center gap-3 py-4 px-8 rounded-full border-2 font-black transition-all duration-300 shadow-sm bg-white text-slate-500 border-slate-100";
+            });
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add(`tab-active-${tab}`);
+
+            if (tab === 'quiz') startQuiz();
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currentQuizIdx];
+
+            let content = `
+                <div class="bg-white rounded-[4rem] shadow-2xl border-2 border-pink-100 min-h-[500px] flex flex-col overflow-hidden fade-in">
+                    <div class="bg-slate-50 p-6 flex justify-between border-b">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-pink-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black">${currentQuizIdx + 1}</div>
+                            <p class="text-sm font-bold text-slate-700">Question ${currentQuizIdx + 1} of ${quizQuestions.length}</p>
+                        </div>
+                        <p class="text-lg font-black text-pink-600">Score: ${score}</p>
+                    </div>
+                    <div class="p-10 md:p-16 flex-grow flex flex-col justify-center">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-12">${q.q}</h2>
+            `;
+
+            if (q.type === 'mc' || q.type === 'error') {
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                q.options.forEach((opt, idx) => {
+                    content += `<button id="opt-${idx}" onclick="handleAnswer(${idx})" class="quiz-opt p-6 rounded-3xl font-black text-left border-2 bg-white border-slate-100 text-slate-600 hover:border-pink-300 transition-all">${opt}</button>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `
+                    <div class="space-y-6 max-w-xl mx-auto w-full">
+                        <div class="text-center text-pink-300 font-black tracking-widest text-2xl uppercase mb-2">${q.hint}</div>
+                        <input type="text" id="type-input" class="w-full text-center text-3xl font-black p-6 bg-slate-50 rounded-3xl border-4 border-dashed border-pink-100 focus:outline-none focus:border-pink-500" placeholder="...">
+                        <button id="type-submit-btn" onclick="handleTypeAnswer()" class="w-full bg-indigo-900 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-800 transition-all">SUBMIT</button>
+                    </div>
+                `;
+            }
+
+            content += `
+                    <div id="feedback" class="mt-8 hidden p-6 rounded-3xl animate-in fade-in zoom-in duration-300">
+                        <p id="feedback-text" class="text-2xl font-black mb-2"></p>
+                        <div id="explanation-box" class="text-sm md:text-base font-medium text-slate-600 border-t border-slate-200 pt-4 mt-2"></div>
+                    </div>
+                </div></div>
+            `;
+            container.innerHTML = content;
+        }
+
+        function handleAnswer(idx) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = idx === q.correct;
+            
+            const btn = document.getElementById(`opt-${idx}`);
+            if (isCorrect) {
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('option-correct');
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function handleTypeAnswer() {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const input = document.getElementById('type-input');
+            const val = input.value.trim().toLowerCase();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = val === q.answer.toLowerCase();
+            
+            if (isCorrect) {
+                input.classList.add('text-green-600', 'border-green-500');
+            } else {
+                input.classList.add('text-red-600', 'border-red-500');
+                if (val) {
+                    input.value = `${val} ➔ ${q.answer}`;
+                } else {
+                    input.value = q.answer;
+                }
+            }
+
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            if (isCorrect) score++;
+            
+            const q = quizQuestions[currentQuizIdx];
+            const fb = document.getElementById('feedback');
+            const fbText = document.getElementById('feedback-text');
+            const fbExp = document.getElementById('explanation-box');
+
+            fb.classList.remove('hidden');
+            fb.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            fbText.innerText = isCorrect ? "🎯 Great job!" : "💡 Let’s learn from this";
+            fbText.className = `text-2xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+            
+            let explanationHTML = `<strong>Explanation:</strong> ${q.explanation || ''}`;
+            if (q.fix) explanationHTML = `<strong>Correction:</strong> <span class="text-red-600 underline">${q.fix}</span><br>${explanationHTML}`;
+            
+            fbExp.innerHTML = explanationHTML;
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                if (currentQuizIdx < quizQuestions.length) renderQuestion();
+                else renderResults();
+            }, 4000);
+        }
+
+        function getEncouragement(s) {
+            if (s === quizQuestions.length) return { title: "Unit Master! 🏆", msg: "You can now discuss plastic and the environment with clear B2-level language.", color: "text-yellow-600", icon: "rocket" };
+            if (s >= 7) return { title: "Excellent Work! ✨", msg: "Your control of vocabulary and causative structures is strong. Try using them in your own essays.", color: "text-green-600", icon: "sparkles" };
+            if (s >= 4) return { title: "Nice Progress! 💪", msg: "Review the Lexicon and Master Patterns tabs, then try the quiz again to consolidate.", color: "text-orange-600", icon: "smile" };
+            return { title: "Keep Practicing! 🌱", msg: "Focus on the word families and key patterns; with more exposure, these questions will feel easier.", color: "text-blue-600", icon: "heart" };
+        }
+
+        function renderResults() {
+            const enc = getEncouragement(score);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="bg-white rounded-[4rem] p-10 md:p-16 text-center shadow-2xl border-4 border-indigo-50 fade-in">
+                    <div class="flex justify-center mb-6">
+                        <i class="fas fa-${enc.icon} fa-5x text-yellow-500 drop-shadow-lg"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-4 ${enc.color}">${enc.title}</h2>
+                    <p class="text-2xl font-bold text-slate-700 mb-6">You scored <span class="text-indigo-600">${score}</span> / ${quizQuestions.length}</p>
+                    <div class="bg-slate-50 p-8 rounded-3xl border-2 border-slate-100 mb-10 max-w-2xl mx-auto italic text-slate-600 text-lg">
+                        "${enc.msg}"
+                    </div>
+                    <button onclick="startQuiz()" class="bg-slate-900 text-white px-12 py-6 rounded-3xl font-black hover:scale-105 transition-all shadow-xl flex items-center gap-3 mx-auto">
+                        <i class="fas fa-redo"></i> RETRY CHALLENGE
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            updateVocabUI();
+            loadIdioms();
+        };
+    </script>
+</body>
+</html>
